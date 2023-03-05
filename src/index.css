@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/*
+ * Utility classes 
+*/
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.btn {
+  border: none;
+  border-radius: 5px;
+  padding: 0.8em 1.6em;
+  cursor: pointer;
+  background-color: #343232;
+  color: whitesmoke;
+  box-sizing: border-box;
+  border: 2px solid #343232;
+  font-weight: 600;
+  letter-spacing: 0.04rem;
+  font-family: Inter;
+  text-transform: capitalize;
+  font-size: 0.85rem;
+}
+
+.btn:hover {
+  background-color: whitesmoke;
+  color: #343232;
+}
+
+.btn-active {
+  background-color: whitesmoke;
+  color: #343232;
+}
