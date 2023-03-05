@@ -37,7 +37,7 @@ export default function Dashboard() {
         <div className="chart-container">
           <BarChart byWeek={byWeek} />
           <CategoryPieChart byWeek={byWeek} />
-          <TotalPieChart />
+          <TotalPieChart byWeek={byWeek} />
         </div>
       </div>
     </>

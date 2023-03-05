@@ -8,21 +8,43 @@ import {
   Label,
   Text,
 } from 'recharts';
-import { CATEGORY_FINANCE } from 'constants/finance';
+import { BUDGET, PER_DAY_FINANCE } from 'constants/finance';
+import { getCurrentWeek } from 'utils/date';
+import { parse } from 'date-fns';
 
-export default function TotalPieChart(props) {
+export default function TotalPieChart({ byWeek }) {
   const colors = ['#726969', '#070707'];
+  let totalSpent = 0;
+  const { weekStart, weekEnd } = getCurrentWeek(new Date());
+  let budget = BUDGET;
 
-  const totalSpent = CATEGORY_FINANCE.map((category) => category.Amount).reduce(
-    (total, it) => total + it
-  );
-  const data = [
-    { Label: 'Remaining', Amount: 14000 - totalSpent },
+  if (byWeek) {
+    totalSpent = PER_DAY_FINANCE.filter((data) => {
+      return (
+        parse(data.Date, 'dd-MM-yyyy', new Date(), {
+          weekStartsOn: 1,
+        }) >= weekStart &&
+        parse(data.Date, 'dd-MM-yyyy', new Date(), {
+          weekStartsOn: 1,
+        }) <= weekEnd
+      );
+    })
+      .map((day) => day.Amount)
+      .reduce((total, it) => total + it);
+    budget = (BUDGET / 4).toFixed(2);
+  } else {
+    totalSpent = PER_DAY_FINANCE.map((category) => category.Amount).reduce(
+      (total, it) => total + it
+    );
+  }
+
+  const DATA = [
+    { Label: 'Remaining', Amount: budget - totalSpent },
     { Label: 'Spent', Amount: totalSpent },
   ];
 
   const getIntroOfPage = (label) => {
-    return data[label]['Label'];
+    return DATA[label]['Label'];
   };
 
   const CustomTooltip = (props) => {
@@ -44,7 +66,7 @@ export default function TotalPieChart(props) {
     <ResponsiveContainer>
       <PieChart width="100%" height="100%">
         <Pie
-          data={data}
+          data={DATA}
           cx="50%"
           cy="50%"
           innerRadius={60}
@@ -52,12 +74,12 @@ export default function TotalPieChart(props) {
           paddingAngle={5}
           dataKey="Amount"
         >
-          {data.map((entry, index) => (
+          {DATA.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
           ))}
           <Label
             value={`${(
-              (data[1].Amount / (data[1].Amount + data[0].Amount)) *
+              (DATA[1].Amount / (DATA[1].Amount + DATA[0].Amount)) *
               100
             ).toFixed(0)}%`}
             offset={0}
