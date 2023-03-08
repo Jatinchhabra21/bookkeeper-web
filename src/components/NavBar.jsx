@@ -21,7 +21,7 @@ export default function NavBar() {
         aria-expanded="false"
         className="menu-btn"
       >
-        <span className="">Menu</span>
+        <span className="sr-only">Menu</span>
         {mobileNavExpanded ? (
           <FiX
             onClick={handleMenuToggle}

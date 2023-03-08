@@ -29,5 +29,20 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
     "vite": "^4.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "npm run lint",
+      "npm run lint:fix"
+    ],
+    "src/**/*.jsx": [
+      "npm run lint",
+      "npm run lint:fix"
+    ]
   }
 }
