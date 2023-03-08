@@ -1,10 +1,10 @@
-import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { CATEGORY_FINANCE, CATEGORY_FINANCE_BY_WEEK } from 'constants/finance';
+import React from "react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { CATEGORY_FINANCE, CATEGORY_FINANCE_BY_WEEK } from "constants/finance";
 
 export default function CategoryPieChart({ byWeek }) {
   const getIntroOfPage = (label) => {
-    return CATEGORY_FINANCE[label]['Category'];
+    return CATEGORY_FINANCE[label]["Category"];
   };
 
   const CustomTooltip = (props) => {
@@ -22,11 +22,9 @@ export default function CategoryPieChart({ byWeek }) {
     return null;
   };
 
-  console.log(byWeek);
-
   const DATA = byWeek ? CATEGORY_FINANCE_BY_WEEK : CATEGORY_FINANCE;
 
-  const colors = ['#000000', '#1A1A1A', '#343232', '#4F4A4A', '#6A6262'];
+  const colors = ["#000000", "#1A1A1A", "#343232", "#4F4A4A", "#6A6262"];
 
   return (
     <ResponsiveContainer>

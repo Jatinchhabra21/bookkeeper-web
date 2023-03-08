@@ -1,5 +1,6 @@
 .chart-container {
   -webkit-box-sizing: border-box;
+  font-family: Inter, Verdana, Geneva, Tahoma, sans-serif;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: flex;
