@@ -23,7 +23,7 @@
 .link {
   position: relative;
   text-decoration: none;
-  text-decoration-color: black;
+  color: black;
   user-select: none;
 }
 
