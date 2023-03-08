@@ -74,14 +74,13 @@
     display: block;
     position: absolute;
     top: 1rem;
-    right: 1rem;
+    right: 2rem;
     width: 2em;
     aspect-ratio: 1;
-    background: url('src/assets/icons/menu.png');
-    background-repeat: no-repeat;
     border: none;
     background-size: contain;
     z-index: 9999;
+    background: transparent;
   }
 
   .logo {

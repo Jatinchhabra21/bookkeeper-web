@@ -1,9 +1,9 @@
-import BarChart from 'components/BarChart';
-import NavBar from 'components/NavBar';
-import React, { useState } from 'react';
-import 'assets/styles/dashboard.css';
-import CategoryPieChart from 'components/CategoryPieChart';
-import TotalPieChart from 'components/TotalPieChart';
+import DailySpendChart from "components/DailySpendChart";
+import CategoryPieChart from "components/CategoryPieChart";
+import TotalPieChart from "components/TotalPieChart";
+import NavBar from "components/NavBar";
+import React, { useState } from "react";
+import "assets/styles/dashboard.css";
 
 export default function Dashboard() {
   const [byWeek, setByWeek] = useState(false);
@@ -22,20 +22,20 @@ export default function Dashboard() {
       <div className="dashboard">
         <div className="btn-wrapper">
           <button
-            className={`btn ${byWeek ? 'btn-active' : ''}`}
+            className={`btn ${byWeek ? "btn-active" : ""}`}
             onClick={handleWeekBtnClick}
           >
             Weekly
           </button>
           <button
-            className={`btn ${!byWeek ? 'btn-active' : ''}`}
+            className={`btn ${!byWeek ? "btn-active" : ""}`}
             onClick={handleMonthBtnClick}
           >
             Monthly
           </button>
         </div>
         <div className="chart-container">
-          <BarChart byWeek={byWeek} />
+          <DailySpendChart byWeek={byWeek} />
           <CategoryPieChart byWeek={byWeek} />
           <TotalPieChart byWeek={byWeek} />
         </div>
