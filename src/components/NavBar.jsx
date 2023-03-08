@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
-import "assets/styles/navbar.css";
-import { Link } from "react-router-dom";
-import { FiX, FiMenu } from "react-icons/fi";
+import React, { useState, useRef } from 'react';
+import 'assets/styles/navbar.css';
+import { Link } from 'react-router-dom';
+import { FiX, FiMenu } from 'react-icons/fi';
 
 export default function NavBar() {
   const [mobileNavExpanded, setMobileNavExpanded] = useState(false);
@@ -9,7 +9,7 @@ export default function NavBar() {
 
   const handleMenuToggle = (event) => {
     toggleMenu.current.dataset.visible = !mobileNavExpanded;
-    event.target.setAttribute("aria-expanded", !mobileNavExpanded);
+    event.target.setAttribute('aria-expanded', !mobileNavExpanded);
     setMobileNavExpanded((isExpanded) => !isExpanded);
   };
 
@@ -21,23 +21,23 @@ export default function NavBar() {
         aria-expanded="false"
         className="menu-btn"
       >
-        <span className="sr-only">Menu</span>
+        <span className="">Menu</span>
         {mobileNavExpanded ? (
           <FiX
             onClick={handleMenuToggle}
             style={{
-              background: "transparent",
-              height: "32px",
-              width: "32px",
+              background: 'transparent',
+              height: '32px',
+              width: '32px',
             }}
           />
         ) : (
           <FiMenu
             onClick={handleMenuToggle}
             style={{
-              background: "transparent",
-              height: "32px",
-              width: "32px",
+              background: 'transparent',
+              height: '32px',
+              width: '32px',
             }}
           />
         )}
