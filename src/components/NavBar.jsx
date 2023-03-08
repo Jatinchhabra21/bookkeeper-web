@@ -3,7 +3,7 @@ import 'assets/styles/navbar.css';
 import { Link } from 'react-router-dom';
 import { FiX, FiMenu } from 'react-icons/fi';
 
-export default function NavBar() {
+export default function NavBar(props) {
   const [mobileNavExpanded, setMobileNavExpanded] = useState(false);
   const toggleMenu = useRef();
 
