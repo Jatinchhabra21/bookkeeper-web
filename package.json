@@ -24,10 +24,11 @@
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
     "eslint": "^8.35.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.1.2",
+    "husky": "^4.3.8",
+    "lint-staged": "^13.1.4",
     "vite": "^4.1.0"
   },
   "husky": {
@@ -36,13 +37,8 @@
     }
   },
   "lint-staged": {
-    "src/**/*.js": [
-      "npm run lint",
-      "npm run lint:fix"
-    ],
-    "src/**/*.jsx": [
-      "npm run lint",
-      "npm run lint:fix"
+    "*.{js,jsx}": [
+      "npm run lint"
     ]
   }
 }
