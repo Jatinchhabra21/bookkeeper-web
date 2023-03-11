@@ -15,9 +15,17 @@
 }
 
 .logo {
+  text-decoration: dotted;
+  color: black;
+  user-select: none;
   font-size: 4.8vw;
   font-weight: 500;
   margin: 0;
+  cursor: pointer;
+}
+
+.logo:visited {
+  color: black;
 }
 
 .link {
@@ -96,7 +104,7 @@
 
 @media (min-width: 35em) {
   .nav-wrapper {
-    align-items: baseline;
+    align-items: center;
     padding: 1em 2em;
   }
 
