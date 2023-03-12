@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import 'assets/styles/navbar.css';
+import './navbar.css';
 import { Link } from 'react-router-dom';
 import { FiX, FiMenu } from 'react-icons/fi';
 
@@ -14,14 +14,14 @@ export default function NavBar() {
   };
 
   return (
-    <header className="nav-wrapper">
-      <Link to={'/'} className="logo">
-        <h1 className="logo">Bookkeeper</h1>
+    <header className="navbar__nav-wrapper">
+      <Link to={'/'} className="navbar__nav-logo">
+        <h1 className="navbar__nav-logo">Bookkeeper</h1>
       </Link>
       <button
-        aria-controls="nav-link"
+        aria-controls="navbar__link-wrapper"
         aria-expanded="false"
-        className="menu-btn"
+        className="navbar__menu-btn"
       >
         <span className="sr-only">Menu</span>
         {mobileNavExpanded ? (
@@ -48,24 +48,28 @@ export default function NavBar() {
         )}
       </button>
       <nav>
-        <ul className="nav-link" data-visible="false" ref={toggleMenu}>
+        <ul
+          className="navbar__link-wrapper"
+          data-visible="false"
+          ref={toggleMenu}
+        >
           <li>
-            <Link className="link" to="/">
+            <Link className="navbar__nav-link" to="/">
               Home
             </Link>
           </li>
           <li>
-            <Link className="link" to="/">
+            <Link className="navbar__nav-link" to="/">
               Records
             </Link>
           </li>
           <li>
-            <Link className="link" to="/dashboard">
+            <Link className="navbar__nav-link" to="/dashboard">
               Dashboard
             </Link>
           </li>
           <li>
-            <Link className="link" to="/">
+            <Link className="navbar__nav-link" to="/">
               Logout
             </Link>
           </li>
