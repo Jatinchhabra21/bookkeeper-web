@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   ResponsiveContainer,
   PieChart,
@@ -6,13 +6,13 @@ import {
   Cell,
   Tooltip,
   Label,
-} from "recharts";
-import { BUDGET, PER_DAY_FINANCE } from "constants/finance";
-import { getCurrentWeek } from "utils/date";
-import { parse } from "date-fns";
+} from 'recharts';
+import { BUDGET, PER_DAY_FINANCE } from 'constants/finance';
+import { getCurrentWeek } from 'utils/date';
+import { parse } from 'date-fns';
 
 export default function TotalPieChart({ byWeek }) {
-  const colors = ["#726969", "#070707"];
+  const colors = ['#726969', '#070707'];
   let totalSpent = 0;
   const { weekStart, weekEnd } = getCurrentWeek(new Date());
   let budget = BUDGET;
@@ -20,10 +20,10 @@ export default function TotalPieChart({ byWeek }) {
   if (byWeek) {
     totalSpent = PER_DAY_FINANCE.filter((data) => {
       return (
-        parse(data.Date, "dd-MM-yyyy", new Date(), {
+        parse(data.Date, 'dd-MM-yyyy', new Date(), {
           weekStartsOn: 1,
         }) >= weekStart &&
-        parse(data.Date, "dd-MM-yyyy", new Date(), {
+        parse(data.Date, 'dd-MM-yyyy', new Date(), {
           weekStartsOn: 1,
         }) <= weekEnd
       );
@@ -38,19 +38,19 @@ export default function TotalPieChart({ byWeek }) {
   }
 
   const DATA = [
-    { Label: "Remaining", Amount: budget - totalSpent },
-    { Label: "Spent", Amount: totalSpent },
+    { Label: 'Remaining', Amount: budget - totalSpent },
+    { Label: 'Spent', Amount: totalSpent },
   ];
 
   const getIntroOfPage = (label) => {
-    return DATA[label]["Label"];
+    return DATA[label]['Label'];
   };
 
   const CustomTooltip = (props) => {
     if (props.active && props.payload && props.payload.length) {
       return (
         <div className="custom-tooltip">
-          <p className="intro">
+          <p>
             {getIntroOfPage(props.payload[0].name)}
             {`: ₹${props.payload[0].value}`}
           </p>
@@ -82,7 +82,7 @@ export default function TotalPieChart({ byWeek }) {
               100
             ).toFixed(0)}%`}
             offset={0}
-            position={"center"}
+            position={'center'}
             fill="#070707"
           />
         </Pie>
