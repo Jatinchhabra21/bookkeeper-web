@@ -58,3 +58,15 @@ body {
   padding: 0.5rem 1rem;
   width: fit-content;
 }
+
+.align-text-center {
+  text-align: center;
+}
+
+.align-text-left {
+  text-align: left;
+}
+
+.align-text-right {
+  text-align: right;
+}

@@ -59,7 +59,7 @@ export default function NavBar() {
             </Link>
           </li>
           <li>
-            <Link className="navbar__nav-link" to="/">
+            <Link className="navbar__nav-link" to="/record">
               Records
             </Link>
           </li>
