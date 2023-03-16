@@ -3,9 +3,9 @@ import {
   Navbar,
   CategoryPieChart,
   TotalPieChart,
-} from 'components';
-import React, { useState } from 'react';
-import './dashboard.css';
+} from "components";
+import React, { useState } from "react";
+import "./dashboard.css";
 
 export default function Dashboard() {
   const [byWeek, setByWeek] = useState(false);
@@ -24,13 +24,13 @@ export default function Dashboard() {
       <div className="dashboard">
         <div className="btn-wrapper">
           <button
-            className={`btn ${byWeek ? 'btn-active' : ''}`}
+            className={`btn ${byWeek ? "btn-active" : ""}`}
             onClick={handleWeekBtnClick}
           >
             Weekly
           </button>
           <button
-            className={`btn ${!byWeek ? 'btn-active' : ''}`}
+            className={`btn ${!byWeek ? "btn-active" : ""}`}
             onClick={handleMonthBtnClick}
           >
             Monthly

@@ -1,9 +1,9 @@
-import React from 'react';
-import DataHeader from './DataHeader/DataHeader';
-import DataRow from './DataRow/DataRow';
-import DataFooter from './DataRow/DataFooter/DataFooter';
-import { RAW_FINANCE_DATA } from 'constants/finance';
-import './data-table.css';
+import React from "react";
+import DataHeader from "./DataHeader/DataHeader";
+import DataRow from "./DataRow/DataRow";
+import DataFooter from "./DataRow/DataFooter/DataFooter";
+import { RAW_FINANCE_DATA } from "constants/finance";
+import "./data-table.css";
 
 export default function DataTable() {
   const totalSpent = RAW_FINANCE_DATA.map((row) => row.Amount).reduce(

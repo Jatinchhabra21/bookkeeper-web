@@ -1,7 +1,7 @@
-import React from 'react';
-import './App.css';
-import { Home, Dashboard, Record } from 'pages';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import { Home, Dashboard, Record } from "pages";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
