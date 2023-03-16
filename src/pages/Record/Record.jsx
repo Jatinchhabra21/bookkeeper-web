@@ -1,10 +1,11 @@
 import React from "react";
-import { Navbar } from "components";
+import { Navbar, DataTable } from "components";
 
 export default function Home() {
   return (
     <>
       <Navbar />
+      <DataTable />
     </>
   );
 }

@@ -1,6 +1,7 @@
 .navbar__nav-wrapper {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1em 2em;
   font-family: Ledger, 'Times New Roman', Times, serif;
 }
