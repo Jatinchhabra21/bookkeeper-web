@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
-import './navbar.css';
-import { Link } from 'react-router-dom';
-import { FiX, FiMenu } from 'react-icons/fi';
+import React, { useState, useRef } from "react";
+import "./navbar.css";
+import { Link } from "react-router-dom";
+import { FiX, FiMenu } from "react-icons/fi";
 
 export default function NavBar() {
   const [mobileNavExpanded, setMobileNavExpanded] = useState(false);
@@ -9,13 +9,13 @@ export default function NavBar() {
 
   const handleMenuToggle = (event) => {
     toggleMenu.current.dataset.visible = !mobileNavExpanded;
-    event.target.setAttribute('aria-expanded', !mobileNavExpanded);
+    event.target.setAttribute("aria-expanded", !mobileNavExpanded);
     setMobileNavExpanded((isExpanded) => !isExpanded);
   };
 
   return (
     <header className="navbar__nav-wrapper">
-      <Link to={'/'} className="navbar__nav-logo">
+      <Link to={"/"} className="navbar__nav-logo">
         <h1 className="navbar__nav-logo">Bookkeeper</h1>
       </Link>
       <button
@@ -28,11 +28,11 @@ export default function NavBar() {
           <FiX
             onClick={handleMenuToggle}
             style={{
-              background: 'transparent',
-              height: '32px',
-              width: '32px',
-              top: '1rem',
-              right: '1.5rem',
+              background: "transparent",
+              height: "32px",
+              width: "32px",
+              top: "1rem",
+              right: "1.5rem",
             }}
             className="fixed"
           />
@@ -40,9 +40,9 @@ export default function NavBar() {
           <FiMenu
             onClick={handleMenuToggle}
             style={{
-              background: 'transparent',
-              height: '32px',
-              width: '32px',
+              background: "transparent",
+              height: "32px",
+              width: "32px",
             }}
           />
         )}

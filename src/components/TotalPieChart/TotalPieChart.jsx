@@ -29,7 +29,7 @@ export default function TotalPieChart({ byWeek }) {
       );
     })
       .map((day) => day.Amount)
-      .reduce((total, it) => total + it);
+      .reduce((total, it) => total + it, 0  );
     budget = (BUDGET / 4).toFixed(2);
   } else {
     totalSpent = PER_DAY_FINANCE.map((category) => category.Amount).reduce(
