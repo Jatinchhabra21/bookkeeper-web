@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DataRow({ data, columns }) {
+export default function DataRowView({ data, columns }) {
   function valuePos(col) {
     if (col === "Amount") return "align-text-right";
     else if (col === "Category") return "align-text-center";

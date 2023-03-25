@@ -6,7 +6,7 @@ td {
 
 .data-table {
   margin: 2em auto;
-  width: 90%;
+  width: 100%;
   font-family: Inter, Verdana, Geneva, Tahoma, sans-serif;
 }
 
@@ -41,7 +41,7 @@ td {
   letter-spacing: 0.04rem;
   text-transform: capitalize;
   text-align: center;
-  font-weight: 500;
+  font-weight: 400;
   padding: 0.3rem;
 }
 
