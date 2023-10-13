@@ -19,6 +19,7 @@ input {
   background-clip: padding-box;
   border: none;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  font-family: Inter, Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /*
@@ -110,6 +111,10 @@ input {
 
 .mt-1 {
   margin-top: 1rem;
+}
+
+.display-none {
+  display: none;
 }
 
 @media (hover: hover) and (pointer: fine) {

@@ -20,7 +20,7 @@
     "linebreak-style": 1,
     "quotes": [
       "error",
-      "double"
+      "single"
     ]
   },
   "parserOptions": {

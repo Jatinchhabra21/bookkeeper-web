@@ -2,6 +2,7 @@ table,
 td {
   border: 2px solid #343232;
   border-collapse: collapse;
+  background-color: whitesmoke;
 }
 
 .data-table {
@@ -31,7 +32,7 @@ td {
 }
 
 .data-body__table-data {
-  font-size: 0.75rem;
+  font-size: 1rem;
   padding: 0.3rem;
 }
 
