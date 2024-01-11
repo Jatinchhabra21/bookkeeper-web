@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const stylesHandler = 'style-loader';
 
 module.exports = {
 	entry: './src/index.tsx',
@@ -17,6 +18,21 @@ module.exports = {
 			{
 				test: /\.(ts|tsx)$/,
 				loader: 'ts-loader',
+			},
+			{
+				test: /\.css$/i,
+				include: path.resolve(__dirname, 'src'),
+				exclude: /node_modules/,
+				use: [
+					stylesHandler,
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1,
+						},
+					},
+					'postcss-loader',
+				],
 			},
 		],
 	},
