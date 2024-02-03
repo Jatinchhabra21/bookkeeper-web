@@ -12,7 +12,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-				exclude: /node_modules/,
+				exclude: '/node_modules',
 				use: ['babel-loader'],
 			},
 			{
@@ -22,7 +22,7 @@ module.exports = {
 			{
 				test: /\.css$/i,
 				include: path.resolve(__dirname, 'src'),
-				exclude: /node_modules/,
+				exclude: '/node_modules',
 				use: [
 					stylesHandler,
 					{
