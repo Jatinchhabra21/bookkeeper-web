@@ -19,5 +19,25 @@
     },
     "ecmaVersion": "latest",
     "sourceType": "module"
+  },
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".tsx",
+          ".ts"
+        ]
+      }
+    ],
+    "import/extensions": [
+      1,
+      "never"
+    ],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error"
+  },
+  "env": {
+    "browser": true
   }
 }
