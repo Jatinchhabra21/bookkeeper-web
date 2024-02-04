@@ -1,3 +1,4 @@
+const stylesHandler = 'style-loader';
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -11,12 +12,27 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-				exclude: /node_modules/,
+				exclude: '/node_modules',
 				use: ['babel-loader'],
 			},
 			{
 				test: /\.(ts|tsx)$/,
 				loader: 'ts-loader',
+			},
+			{
+				test: /\.css$/i,
+				include: path.resolve(__dirname, 'src'),
+				exclude: '/node_modules',
+				use: [
+					stylesHandler,
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1,
+						},
+					},
+					'postcss-loader',
+				],
 			},
 		],
 	},
