@@ -6,6 +6,7 @@
 }
 
 .navbar {
-	padding-block: min(30vh, 10rem);
+	padding-block: min(15vh, 10rem);
 	backdrop-filter: blur(8rem);
+	box-shadow: 0 0 32px 4px #fafafa1a;
 }

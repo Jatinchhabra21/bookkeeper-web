@@ -27,6 +27,10 @@ export default function Header() {
 		dispatch(toggleIsNavExpanded());
 	});
 
+	useGSAP(() => {
+		gsap.to('.navbar', { translateX: '0', opacity: 1, duration: 0.5 });
+	});
+
 	return (
 		<header className="text-white">
 			<div className="header-wrapper flex items-center justify-between bg-gray-dark p-4">
@@ -43,7 +47,7 @@ export default function Header() {
 					</div>
 				</div>
 				<aside
-					className={`navbar fixed right-0 top-0 z-10 h-screen w-2/3 translate-x-full bg-gray-dark px-6 font-light text-white opacity-0 sm:static sm:flex sm:h-fit sm:justify-end sm:bg-opacity-0 sm:py-0 ${isNavExpanded ? 'flex' : 'hidden'}`}
+					className={`navbar fixed right-0 top-0 z-10 h-svh max-h-svh w-2/3 translate-x-full bg-gray-dark px-6 font-light text-white opacity-0 sm:static sm:flex sm:h-fit sm:justify-end sm:bg-opacity-0 sm:py-0 ${isNavExpanded ? 'flex' : 'hidden'}`}
 				>
 					<nav className="z-10 flex flex-col items-start gap-8 sm:flex-row">
 						<Navlink text="transactions" />

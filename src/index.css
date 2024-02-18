@@ -2,6 +2,10 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+body {
+	min-height: 100vh;
+}
+
 #root {
 	/* background-color: #1c1c21; */
 	font-family: Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -9,10 +13,6 @@
 
 * {
 	min-width: 0;
-}
-
-.h-fill-available {
-	height: -webkit-fill-available;
 }
 
 a {
