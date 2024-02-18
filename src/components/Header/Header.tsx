@@ -1,3 +1,4 @@
+import React from 'react';
 import './styles.css';
 import gsap from 'gsap';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -10,6 +11,7 @@ export default function Header() {
 	const isNavExpanded = useAppSelector((state) => state.global.isNavExpanded);
 	const dispatch = useAppDispatch();
 	const container = useRef(null);
+	const navbar = useRef(null);
 	const { contextSafe } = useGSAP({ scope: container });
 
 	const handleHamburgerClick = contextSafe(() => {
@@ -27,23 +29,29 @@ export default function Header() {
 
 	return (
 		<header className="text-white">
-			<div className="flex items-center justify-between bg-gray-dark p-4">
+			<div className="header-wrapper flex items-center justify-between bg-gray-dark p-4">
 				<span className="text-lg font-medium">Bookkeeper</span>
-				<nav className="hidden gap-[2vw] border-b-[2] sm:flex">
-					<Navlink text="transactions" />
-					<Navlink text="goals" />
-					<Navlink text="budget" />
-					<Navlink text="bills" />
-				</nav>
-				<div
-					className="bar-wrapper sm:hidden"
-					onClick={handleHamburgerClick}
-					ref={container}
-				>
-					<div className="bar bar-1 bg-white"></div>
-					<div className="bar bar-2 bg-white"></div>
-					<div className="bar bar-3 bg-white"></div>
+				<div className="flex items-center justify-between">
+					<div
+						className="z-50 sm:hidden"
+						onClick={handleHamburgerClick}
+						ref={container}
+					>
+						<div className="bar bar-1 bg-white"></div>
+						<div className="bar bar-2 bg-white"></div>
+						<div className="bar bar-3 bg-white"></div>
+					</div>
 				</div>
+				<aside
+					className={`navbar fixed right-0 top-0 z-10 h-screen w-2/3 translate-x-full bg-gray-dark px-6 font-light text-white opacity-0 sm:static sm:flex sm:h-fit sm:justify-end sm:bg-opacity-0 sm:py-0 ${isNavExpanded ? 'flex' : 'hidden'}`}
+				>
+					<nav className="z-10 flex flex-col items-start gap-8 sm:flex-row">
+						<Navlink text="transactions" />
+						<Navlink text="goals" />
+						<Navlink text="budget" />
+						<Navlink text="bills" />
+					</nav>
+				</aside>
 			</div>
 		</header>
 	);
