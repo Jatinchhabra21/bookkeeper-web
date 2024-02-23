@@ -1,49 +1,66 @@
+import React, { useState } from 'react';
 import './styles.css';
 import gsap from 'gsap';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { toggleIsNavExpanded } from '../../store/slices/globalSlice';
 import { useGSAP } from '@gsap/react';
-import { useRef } from 'react';
 import Navlink from '../Navlink/Navlink';
+import { Button } from '../../../components/ui/button';
+import constants from '../../constants/Hero.constants';
 
 export default function Header() {
-	const isNavExpanded = useAppSelector((state) => state.global.isNavExpanded);
-	const dispatch = useAppDispatch();
-	const container = useRef(null);
-	const { contextSafe } = useGSAP({ scope: container });
+	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
+	const { contextSafe } = useGSAP();
 
 	const handleHamburgerClick = contextSafe(() => {
 		if (!isNavExpanded) {
 			gsap.to('.bar-1', { rotate: -45, y: 10 });
 			gsap.to('.bar-2', { opacity: 0 });
 			gsap.to('.bar-3', { rotate: 45, y: -10 });
+			gsap.to('.navbar', {
+				translateX: '0',
+				opacity: 1,
+				duration: 0.35,
+			});
+			setIsNavExpanded(true);
 		} else {
 			gsap.to('.bar-1', { rotate: 0, y: 0 });
 			gsap.to('.bar-2', { opacity: 1 });
 			gsap.to('.bar-3', { rotate: 0, y: 0 });
+			gsap.to('.navbar', {
+				translateX: '100%',
+				opacity: 0.5,
+				duration: 0.35,
+				onComplete: () => setIsNavExpanded(false),
+			});
 		}
-		dispatch(toggleIsNavExpanded());
 	});
 
 	return (
-		<header className="text-white">
-			<div className="flex items-center justify-between bg-gray-dark p-4">
-				<span className="text-lg font-medium">Bookkeeper</span>
-				<nav className="hidden gap-[2vw] border-b-[2] sm:flex">
-					<Navlink text="transactions" />
-					<Navlink text="goals" />
-					<Navlink text="budget" />
-					<Navlink text="bills" />
-				</nav>
-				<div
-					className="bar-wrapper sm:hidden"
-					onClick={handleHamburgerClick}
-					ref={container}
-				>
-					<div className="bar bar-1 bg-white"></div>
-					<div className="bar bar-2 bg-white"></div>
-					<div className="bar bar-3 bg-white"></div>
+		<header className="sticky w-screen border-b-slate-400 text-white backdrop-blur">
+			<div className="flex items-center justify-between bg-gray-dark bg-opacity-50 p-4">
+				<span className="cursor-pointer text-base font-medium">
+					<a href="/">Bookkeeper</a>
+				</span>
+				<div className="flex items-center justify-between sm:hidden">
+					<div className="z-50 " onClick={handleHamburgerClick}>
+						<div className="bar bar-1 bg-white"></div>
+						<div className="bar bar-2 bg-white"></div>
+						<div className="bar bar-3 bg-white"></div>
+					</div>
 				</div>
+				<aside
+					className={`navbar fixed right-0 top-0 z-40 flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between gap-10 bg-gray-dark px-8 font-light text-white sm:static sm:flex sm:h-fit sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0 ${isNavExpanded ? 'flex' : 'hidden'}`}
+				>
+					<nav className="z-40 flex flex-col gap-6 sm:flex-row">
+						<Navlink text="transactions" />
+						<Navlink text="goals" />
+						<Navlink text="budget" />
+						<Navlink text="bills" />
+					</nav>
+					<div className="flex flex-col justify-between gap-4 sm:flex-row">
+						<Button variant="default">{constants.SIGNUP_CTA_TEXT}</Button>
+						<Button variant="secondary">{constants.LOGIN_CTA_TEXT}</Button>
+					</div>
+				</aside>
 			</div>
 		</header>
 	);
