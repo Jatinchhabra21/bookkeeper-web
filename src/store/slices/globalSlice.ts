@@ -1,22 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface GlobalState {
-	isNavExpanded: boolean;
+	isSignUpDialogVisible: boolean;
 }
 
 const initialState: GlobalState = {
-	isNavExpanded: false,
+	isSignUpDialogVisible: false,
 };
 
 export const globalSlice = createSlice({
 	name: 'global',
 	initialState,
 	reducers: {
-		toggleIsNavExpanded: (state) => {
-			return { ...state, isNavExpanded: !state.isNavExpanded };
+		toggleIsSignUpDialogVisible: (state) => {
+			return { ...state, isSignUpDialogVisible: !state.isSignUpDialogVisible };
 		},
 	},
 });
 
-export const { toggleIsNavExpanded } = globalSlice.actions;
+export const { toggleIsSignUpDialogVisible } = globalSlice.actions;
 export default globalSlice.reducer;

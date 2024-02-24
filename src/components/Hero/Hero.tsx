@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import constants from '../../constants/Hero.constants';
 import { Button } from '../../../components/ui/button';
-import './styles.css';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { useAppDispatch } from '../../store/hooks';
+import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
 
 export default function Hero() {
 	const timeline = useRef<gsap.core.Timeline | null>(null);
+	const dispatch = useAppDispatch();
 
 	useGSAP(
 		() => {
@@ -49,7 +51,10 @@ export default function Hero() {
 				</p>
 			</div>
 			<div className="flex gap-8">
-				<Button className="rounded-md" variant="default">
+				<Button
+					variant="default"
+					onClick={() => dispatch(toggleIsSignUpDialogVisible())}
+				>
 					{constants.SIGNUP_CTA_TEXT}
 				</Button>
 				<Button variant="outline">{constants.LOGIN_CTA_TEXT}</Button>

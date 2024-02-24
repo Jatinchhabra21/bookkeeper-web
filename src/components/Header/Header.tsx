@@ -5,10 +5,13 @@ import { useGSAP } from '@gsap/react';
 import Navlink from '../Navlink/Navlink';
 import { Button } from '../../../components/ui/button';
 import constants from '../../constants/Hero.constants';
+import { useAppDispatch } from '../../store/hooks';
+import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
 
 export default function Header() {
 	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
 	const { contextSafe } = useGSAP();
+	const dispatch = useAppDispatch();
 
 	const handleHamburgerClick = contextSafe(() => {
 		if (!isNavExpanded) {
@@ -57,7 +60,12 @@ export default function Header() {
 						<Navlink text="bills" />
 					</nav>
 					<div className="flex flex-col justify-between gap-4 sm:flex-row">
-						<Button variant="default">{constants.SIGNUP_CTA_TEXT}</Button>
+						<Button
+							variant="default"
+							onClick={() => dispatch(toggleIsSignUpDialogVisible())}
+						>
+							{constants.SIGNUP_CTA_TEXT}
+						</Button>
 						<Button variant="secondary">{constants.LOGIN_CTA_TEXT}</Button>
 					</div>
 				</aside>
