@@ -4,9 +4,10 @@ import { Input } from '../../../components/ui/input';
 import { SignUpDialogStage } from 'src/constants/SignUpDialog.constants';
 import { DialogHeader, DialogTitle } from '../../../components/ui/dialog';
 import { useAppSelector } from '../../store/hooks';
+import constants from '../../constants/OtpDialogContent.constants';
 
 type OtpFieldStateType = {
-	value: number | null;
+	value: number | '';
 	error: string | null;
 };
 
@@ -20,20 +21,16 @@ export default function OtpDialogContent({
 	nextDialogStage,
 }: OtpDialogContentProps) {
 	const [otpField, setOtpField] = useState<OtpFieldStateType>({
-		value: null,
+		value: '',
 		error: null,
 	} as OtpFieldStateType);
 
 	const userEmail = useAppSelector((state) => state.auth.email);
 
-	useEffect(() => {
-		console.log('OTP:', otpField.value);
-	}, [otpField.value]);
-
 	const validateOtp = () => {
-		if (otpField.value?.toString().length !== 6)
+		if (otpField.value?.toString().length !== constants.OTP_LENGTH)
 			setOtpField((prev) => {
-				return { ...prev, error: 'Invalid OTP' };
+				return { ...prev, error: constants.OTP_INVALID };
 			});
 		else
 			setOtpField((prev) => {
@@ -44,7 +41,7 @@ export default function OtpDialogContent({
 	const handleOtpStageChange = () => {
 		if (!otpField.value)
 			setOtpField((prev) => {
-				return { ...prev, error: 'Please enter OTP sent to your e-mail.' };
+				return { ...prev, error: constants.OTP_REQUIRED };
 			});
 		updateCurrentDialogStage(nextDialogStage);
 	};
@@ -52,14 +49,16 @@ export default function OtpDialogContent({
 	return (
 		<>
 			<DialogHeader>
-				<DialogTitle>OTP was sent to {userEmail}</DialogTitle>
+				<DialogTitle>
+					{constants.DIALOG_TITLE} {userEmail}
+				</DialogTitle>
 			</DialogHeader>
 			<div className="flex flex-col gap-1">
 				<div className="flex w-full items-center space-x-2">
 					<Input
 						type="number"
-						placeholder="OTP"
-						value={otpField.value ?? undefined}
+						placeholder={constants.OTP_INPUT_PLACEHOLDER}
+						value={otpField.value}
 						onChange={(event: ChangeEvent<HTMLInputElement>) =>
 							setOtpField((prev) => {
 								return { ...prev, value: parseInt(event.target.value) };
@@ -70,7 +69,7 @@ export default function OtpDialogContent({
 						autoFocus
 					/>
 					<Button disabled={!!otpField.error} onClick={handleOtpStageChange}>
-						Next
+						{constants.CTA_TEXT}
 					</Button>
 				</div>
 				{otpField.error && (

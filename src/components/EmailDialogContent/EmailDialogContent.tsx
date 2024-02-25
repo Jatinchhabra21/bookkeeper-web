@@ -1,7 +1,8 @@
 import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { SignUpDialogStage } from 'src/constants/SignUpDialog.constants';
+import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
+import constants from '../../constants/EmailDialogContent.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUserEmail, setUserName } from '../../store/slices/authSlice';
 import {
@@ -13,7 +14,7 @@ import {
 type EmailFieldStateType = {
 	email: string;
 	name: string;
-	emailError: string | undefined;  
+	emailError: string | undefined;
 	nameError: string | undefined;
 };
 
@@ -35,9 +36,26 @@ export default function EmailDialogContent({
 	} as EmailFieldStateType);
 
 	const handleEmailStageChange = () => {
-		if (!emailStage.email) {
+		if (!emailStage.email && !emailStage.name) {
 			setEmailStage((prev) => {
-				return { ...prev, emailError: 'Email address is required' };
+				return {
+					...prev,
+					emailError: constants.EMAIL_REQUIRED,
+					nameError: constants.NAME_REQUIRED,
+				};
+			});
+			return;
+		} else if (!emailStage.email) {
+			setEmailStage((prev) => {
+				return {
+					...prev,
+					emailError: constants.EMAIL_REQUIRED,
+				};
+			});
+			return;
+		} else if (!emailStage.name) {
+			setEmailStage((prev) => {
+				return { ...prev, nameError: constants.NAME_REQUIRED };
 			});
 			return;
 		}
@@ -48,15 +66,12 @@ export default function EmailDialogContent({
 
 	const handleEmailFieldError = () => {
 		if (!emailStage.email) {
-			setEmailStage((prev) => {
-				return { ...prev, emailError: undefined };
-			});
 			return;
 		}
 		const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 		if (!regex.test(emailStage.email))
 			setEmailStage((prev) => {
-				return { ...prev, emailError: 'Invalid email' };
+				return { ...prev, emailError: constants.EMAIL_INVALID };
 			});
 		else
 			setEmailStage((prev) => {
@@ -64,14 +79,13 @@ export default function EmailDialogContent({
 			});
 	};
 
-	const handleNameError = (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target.value.length === 0) {
+	const handleNameFieldError = () => {
+		if (emailStage.name) {
 			setEmailStage((prev) => {
-				return { ...prev, nameError: 'Please enter your name' };
-			});
-		} else {
-			setEmailStage((prev) => {
-				return { ...prev, nameError: undefined };
+				return {
+					...prev,
+					nameError: undefined,
+				};
 			});
 		}
 	};
@@ -79,15 +93,20 @@ export default function EmailDialogContent({
 	return (
 		<>
 			<DialogHeader>
-				<DialogTitle>Enter your email</DialogTitle>
+				<DialogTitle>{constants.DIALOG_TITLE}</DialogTitle>
 			</DialogHeader>
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-col gap-1">
 					<Input
 						type="text"
-						placeholder="Full name"
-						onBlur={handleNameError}
+						placeholder={constants.NAME_INPUT_PLACEHOLDER}
 						className={`${emailStage.nameError ? 'border-[1] border-red-600' : ''} flex-1`}
+						onBlur={handleNameFieldError}
+						onChange={(event) => {
+							setEmailStage((prev) => {
+								return { ...prev, name: event.target.value };
+							});
+						}}
 						required
 						aria-required
 						autoFocus
@@ -101,7 +120,7 @@ export default function EmailDialogContent({
 				<div className="flex flex-col gap-1">
 					<Input
 						type="email"
-						placeholder="Email"
+						placeholder={constants.EMAIL_INPUT_PLACEHOLDER}
 						value={emailStage.email}
 						onChange={(event: ChangeEvent<HTMLInputElement>) =>
 							setEmailStage((prev) => {
@@ -125,7 +144,7 @@ export default function EmailDialogContent({
 					disabled={!!(emailStage.emailError || emailStage.nameError)}
 					onClick={handleEmailStageChange}
 				>
-					Get Otp
+					{constants.CTA_TEXT}
 				</Button>
 			</DialogFooter>
 		</>

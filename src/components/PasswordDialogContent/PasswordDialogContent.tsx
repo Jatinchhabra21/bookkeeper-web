@@ -8,6 +8,7 @@ import {
 } from '../../../components/ui/dialog';
 import { useAppDispatch } from '../../store/hooks';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
+import constants from '../../constants/PasswordDialogContent.constants';
 
 type PasswordFieldStateType = {
 	password: string;
@@ -19,6 +20,7 @@ type PasswordFieldStateType = {
 export default function PasswordDialogContent() {
 	const [passwordStage, setPasswordStage] = useState<PasswordFieldStateType>({
 		password: '',
+		repeatPassword: '',
 	} as PasswordFieldStateType);
 
 	const dispatch = useAppDispatch();
@@ -26,20 +28,20 @@ export default function PasswordDialogContent() {
 	const handlePasswordStageChange = () => {
 		if (!passwordStage.password) {
 			setPasswordStage((prev) => {
-				return { ...prev, error: 'Password is required' };
+				return { ...prev, error: constants.PASSWORD_REQUIRED };
 			});
 		} else if (!passwordStage.repeatPassword) {
 			setPasswordStage((prev) => {
 				return {
 					...prev,
-					repeatPasswordError: 'Please confirm your password',
+					repeatPasswordError: constants.REPEAT_PASSWORD_REQUIRED,
 				};
 			});
 		} else if (passwordStage.password !== passwordStage.repeatPassword) {
 			setPasswordStage((prev) => {
 				return {
 					...prev,
-					repeatPasswordError: 'Password does not match',
+					repeatPasswordError: constants.PASSWORD_NO_MATCH,
 				};
 			});
 		} else {
@@ -53,7 +55,7 @@ export default function PasswordDialogContent() {
 	const handlePasswordFieldError = () => {
 		if (!passwordStage.password) {
 			setPasswordStage((prev) => {
-				return { ...prev, error: 'Password can not be empty' };
+				return { ...prev, error: constants.PASSWORD_REQUIRED };
 			});
 			return;
 		}
@@ -70,33 +72,33 @@ export default function PasswordDialogContent() {
 
 		if (passwordStage.password.length < 8) {
 			setPasswordStage((prev) => {
-				return { ...prev, error: 'Password length is less than 8 characters' };
+				return { ...prev, error: constants.PASSWORD_MIN_LENGTH };
 			});
 		} else if (passwordStage.password.length > 16) {
 			setPasswordStage((prev) => {
-				return { ...prev, error: 'Password length is more than 16 characters' };
+				return { ...prev, error: constants.PASSWORD_MAX_LENGTH };
 			});
 		} else if (!digitRegex.test(passwordStage.password)) {
 			setPasswordStage((prev) => {
-				return { ...prev, error: 'Password should contain at least one digit' };
+				return { ...prev, error: constants.PASSWORD_DIGIT_RULE };
 			});
 		} else if (!uppercaseRegex.test(passwordStage.password)) {
 			setPasswordStage((prev) => {
 				return {
 					...prev,
-					error: 'Password should contain at least one uppercase character',
+					error: constants.PASSWORD_UPPERCASE_RULE,
 				};
 			});
 		} else if (!specialCharRegex.test(passwordStage.password)) {
 			setPasswordStage((prev) => {
 				return {
 					...prev,
-					error: 'Password should contain at least one special character',
+					error: constants.PASSWORD_SPECIAL_CHAR_RULE,
 				};
 			});
 		} else if (!regex.test(passwordStage.password)) {
 			setPasswordStage((prev) => {
-				return { ...prev, error: 'Invalid password' };
+				return { ...prev, error: constants.PASSWORD_INVALID };
 			});
 		} else {
 			setPasswordStage((prev) => {
@@ -110,14 +112,14 @@ export default function PasswordDialogContent() {
 			setPasswordStage((prev) => {
 				return {
 					...prev,
-					repeatPasswordError: 'Please re-enter your password',
+					repeatPasswordError: constants.REPEAT_PASSWORD_REQUIRED,
 				};
 			});
 		} else if (passwordStage.password !== event.target.value) {
 			setPasswordStage((prev) => {
 				return {
 					...prev,
-					repeatPasswordError: 'Password does not match',
+					repeatPasswordError: constants.PASSWORD_NO_MATCH,
 				};
 			});
 		} else {
@@ -136,7 +138,7 @@ export default function PasswordDialogContent() {
 				<div className="flex flex-col gap-1">
 					<Input
 						type="password"
-						placeholder="Password"
+						placeholder={constants.PASSWORD_INPUT_PLACEHOLDER}
 						value={passwordStage.password}
 						onChange={(event: ChangeEvent<HTMLInputElement>) =>
 							setPasswordStage((prev) => {
@@ -158,7 +160,7 @@ export default function PasswordDialogContent() {
 				<div className="flex flex-col gap-1">
 					<Input
 						type="password"
-						placeholder="Re-enter your password"
+						placeholder={constants.REPEAT_PASSWORD_INPUT_PLACEHOLDER}
 						value={passwordStage.repeatPassword}
 						onChange={(event) => {
 							setPasswordStage((prev) => {
@@ -187,7 +189,7 @@ export default function PasswordDialogContent() {
 					}
 					onClick={handlePasswordStageChange}
 				>
-					Create account
+					{constants.CTA_TEXT}
 				</Button>
 			</DialogFooter>
 		</>
