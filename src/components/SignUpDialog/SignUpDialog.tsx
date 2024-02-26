@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-} from '../../../components/ui/dialog';
+import React, { useState } from 'react';
+import { Dialog, DialogContent } from '../../../components/ui/dialog';
 import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
-import EmailDialogContent from '../EmailDialogContent/EmailDialogContent';
+import UserDetailDialogContent from '../UserDetailDialogContent/UserDetailDialogContent';
 import OtpDialogContent from '../OtpDialogContent/OtpDialogContent';
 import { setUserEmail } from '../../store/slices/authSlice';
-import PasswordDialogContent from '../PasswordDialogContent/PasswordDialogContent';
 
 export default function SignUpDialog() {
 	const [signUpDialogStage, setSignUpDialogStage] = useState<SignUpDialogStage>(
-		SignUpDialogStage.EMAIL
+		SignUpDialogStage.USER_DETAIL
 	);
 
 	const isSignUpDialogVisible = useAppSelector(
@@ -26,22 +20,15 @@ export default function SignUpDialog() {
 
 	function getDialogContent() {
 		switch (signUpDialogStage) {
-			case SignUpDialogStage.EMAIL:
+			case SignUpDialogStage.USER_DETAIL:
 				return (
-					<EmailDialogContent
+					<UserDetailDialogContent
 						updateCurrentDialogStage={setSignUpDialogStage}
 						nextDialogStage={SignUpDialogStage.OTP}
 					/>
 				);
 			case SignUpDialogStage.OTP:
-				return (
-					<OtpDialogContent
-						updateCurrentDialogStage={setSignUpDialogStage}
-						nextDialogStage={SignUpDialogStage.PASSWORD}
-					/>
-				);
-			case SignUpDialogStage.PASSWORD:
-				return <PasswordDialogContent />;
+				return <OtpDialogContent />;
 		}
 	}
 

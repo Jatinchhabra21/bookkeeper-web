@@ -52,7 +52,7 @@ export default function Header() {
 					</div>
 				</div>
 				<aside
-					className={`navbar fixed right-0 top-0 z-40 flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between gap-10 bg-gray-dark px-8 font-light text-white sm:static sm:flex sm:h-fit sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0 ${isNavExpanded ? 'flex' : 'hidden'}`}
+					className={`navbar fixed right-0 top-0 z-40 flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between gap-10 bg-gray-dark px-8 font-light text-white ${isNavExpanded ? 'flex' : 'hidden'} sm:static sm:flex sm:h-fit sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0 `}
 				>
 					<nav className="z-40 flex flex-col gap-6 sm:flex-row">
 						<Navlink text={headerConstants.NAV_LINK_TRANSACTIONS} />

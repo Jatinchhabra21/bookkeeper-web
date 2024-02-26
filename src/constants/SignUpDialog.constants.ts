@@ -4,8 +4,6 @@ export default Object.freeze({
 });
 
 export enum SignUpDialogStage {
-	EMAIL = '0',
+	USER_DETAIL = '0',
 	OTP = '1',
-	PASSWORD = '2',
-	CREATED = '3',
 }
