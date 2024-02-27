@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { SignUpDialogStage } from 'src/constants/SignUpDialog.constants';
 import { DialogHeader, DialogTitle } from '../../../components/ui/dialog';
-import { useAppSelector } from '../../store/hooks';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import constants from '../../constants/OtpDialogContent.constants';
+import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
+import { DialogStage } from 'src/constants/SignUpDialog.constants';
 
 type OtpFieldStateType = {
 	value: number | '';
@@ -12,14 +13,16 @@ type OtpFieldStateType = {
 };
 
 export type OtpDialogContentProps = {
-	updateCurrentDialogStage: (value: React.SetStateAction<any>) => void;
-	nextDialogStage: SignUpDialogStage;
+	updateCurrentDialogStage?: (email: React.SetStateAction<any>) => void;
+	nextDialogStage?: DialogStage;
 };
 
 export default function OtpDialogContent({
 	updateCurrentDialogStage,
 	nextDialogStage,
 }: OtpDialogContentProps) {
+	const dispatch = useAppDispatch();
+
 	const [otpField, setOtpField] = useState<OtpFieldStateType>({
 		value: '',
 		error: null,
@@ -43,7 +46,7 @@ export default function OtpDialogContent({
 			setOtpField((prev) => {
 				return { ...prev, error: constants.OTP_REQUIRED };
 			});
-		updateCurrentDialogStage(nextDialogStage);
+		dispatch(toggleIsSignUpDialogVisible());
 	};
 
 	return (

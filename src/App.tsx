@@ -4,7 +4,8 @@ import { Header, FullPageSpinner } from './components';
 import { Size } from './components/Spinner/Spinner.types';
 import { useAppSelector } from './store/hooks';
 import HomePage from './pages/HomePage';
-import SignUpDialog from './components/SignUpDialog/SignUpDialog';
+import AuthDialog from './components/AuthDialog/AuthDialog';
+import { DialogStage } from './constants/SignUpDialog.constants';
 
 export default function App() {
 	const isSignUpDialogVisible = useAppSelector(
@@ -13,7 +14,12 @@ export default function App() {
 
 	return (
 		<Suspense fallback={<FullPageSpinner size={Size.normal} />}>
-			{isSignUpDialogVisible && <SignUpDialog />}
+			{isSignUpDialogVisible && (
+				<AuthDialog
+					initialDialogStage={DialogStage.USER_DETAIL}
+					isVisible={isSignUpDialogVisible}
+				/>
+			)}
 			<div className="flex h-screen flex-col">
 				<Header />
 				<BrowserRouter>
