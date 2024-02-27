@@ -5,13 +5,22 @@ import { DialogHeader, DialogTitle } from '../../../components/ui/dialog';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import constants from '../../constants/OtpDialogContent.constants';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
+import { DialogStage } from 'src/constants/SignUpDialog.constants';
 
 type OtpFieldStateType = {
 	value: number | '';
 	error: string | null;
 };
 
-export default function OtpDialogContent() {
+export type OtpDialogContentProps = {
+	updateCurrentDialogStage?: (email: React.SetStateAction<any>) => void;
+	nextDialogStage?: DialogStage;
+};
+
+export default function OtpDialogContent({
+	updateCurrentDialogStage,
+	nextDialogStage,
+}: OtpDialogContentProps) {
 	const dispatch = useAppDispatch();
 
 	const [otpField, setOtpField] = useState<OtpFieldStateType>({

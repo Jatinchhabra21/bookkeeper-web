@@ -1,7 +1,7 @@
-import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
+import { DialogStage } from '../../constants/SignUpDialog.constants';
 import constants from '../../constants/EmailDialogContent.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUserEmail, setUserName } from '../../store/slices/authSlice';
@@ -12,6 +12,7 @@ import {
 } from '../../../components/ui/dialog';
 import { useRequestAccountActivationOtpMutation } from '../../store/slices/apiSlice';
 import { OtpRequest } from '../../store/apiSlice.types';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 type UserDetailStateType = {
 	email: string;
@@ -26,7 +27,7 @@ type UserDetailStateType = {
 
 export type UserDetailDialogContentProps = {
 	updateCurrentDialogStage: (email: React.SetStateAction<any>) => void;
-	nextDialogStage: SignUpDialogStage;
+	nextDialogStage: DialogStage;
 };
 
 export default function UserDetailDialogContent({
@@ -35,7 +36,12 @@ export default function UserDetailDialogContent({
 }: UserDetailDialogContentProps) {
 	const userEmail = useAppSelector((state) => state.auth.email);
 
-	const [requestOtp, { isLoading }] = useRequestAccountActivationOtpMutation();
+	const [
+		requestOtp,
+		{ isLoading: isRequestOtpLoading, isError: isRequestOtpError },
+	] = useRequestAccountActivationOtpMutation();
+
+	useEffect(() => console.log(isRequestOtpLoading), [isRequestOtpLoading]);
 
 	const dispatch = useAppDispatch();
 
@@ -49,7 +55,7 @@ export default function UserDetailDialogContent({
 	const handlePasswordFieldError = () => {
 		if (!userDetail.password) {
 			setUserDetail((prev) => {
-				return { ...prev, error: constants.PASSWORD_REQUIRED };
+				return { ...prev, passwordError: constants.PASSWORD_REQUIRED };
 			});
 			return;
 		}
@@ -102,18 +108,18 @@ export default function UserDetailDialogContent({
 	};
 
 	const handleRepeatPasswordError = () => {
-		if (!userDetail.repeatPassword) {
-			setUserDetail((prev) => {
-				return {
-					...prev,
-					repeatPasswordError: constants.REPEAT_PASSWORD_REQUIRED,
-				};
-			});
-		} else if (userDetail.password !== userDetail.repeatPassword) {
+		if (userDetail.password !== userDetail.repeatPassword) {
 			setUserDetail((prev) => {
 				return {
 					...prev,
 					repeatPasswordError: constants.PASSWORD_NO_MATCH,
+				};
+			});
+		} else if (!userDetail.repeatPassword) {
+			setUserDetail((prev) => {
+				return {
+					...prev,
+					repeatPasswordError: constants.REPEAT_PASSWORD_REQUIRED,
 				};
 			});
 		} else {
@@ -125,7 +131,9 @@ export default function UserDetailDialogContent({
 
 	const handleEmailFieldError = () => {
 		if (!userDetail.email) {
-			return;
+			setUserDetail((prev) => {
+				return { ...prev, emailError: constants.EMAIL_REQUIRED };
+			});
 		}
 		const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 		if (!regex.test(userDetail.email))
@@ -144,6 +152,13 @@ export default function UserDetailDialogContent({
 				return {
 					...prev,
 					nameError: undefined,
+				};
+			});
+		} else {
+			setUserDetail((prev) => {
+				return {
+					...prev,
+					nameError: constants.NAME_REQUIRED,
 				};
 			});
 		}
@@ -207,7 +222,7 @@ export default function UserDetailDialogContent({
 					<Input
 						type="text"
 						placeholder={constants.NAME_INPUT_PLACEHOLDER}
-						className={`${userDetail.nameError ? 'border-[1] border-red-600' : ''} flex-1`}
+						className={`${userDetail.nameError ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1`}
 						onBlur={handleNameFieldError}
 						onChange={(event) => {
 							setUserDetail((prev) => {
@@ -235,7 +250,7 @@ export default function UserDetailDialogContent({
 							})
 						}
 						onBlur={handleEmailFieldError}
-						className={`${userDetail.emailError ? 'border-[1] border-red-600' : ''} flex-1`}
+						className={`${userDetail.emailError ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1`}
 						required
 						aria-required
 					/>
@@ -258,7 +273,7 @@ export default function UserDetailDialogContent({
 							})
 						}
 						onBlur={handlePasswordFieldError}
-						className={`${userDetail.passwordError ? 'border-[1] border-red-600' : ''} flex-1`}
+						className={`${userDetail.passwordError ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1`}
 						required
 						aria-required
 					/>
@@ -282,7 +297,7 @@ export default function UserDetailDialogContent({
 							});
 						}}
 						onBlur={handleRepeatPasswordError}
-						className={`${userDetail.repeatPasswordError ? 'border-[1] border-red-600' : ''} flex-1`}
+						className={`${userDetail.repeatPasswordError ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1`}
 						required
 						aria-required
 					/>
@@ -294,12 +309,26 @@ export default function UserDetailDialogContent({
 				</div>
 			</div>
 			<DialogFooter>
-				<Button
-					disabled={!!(userDetail.emailError || userDetail.nameError)}
-					onClick={handleEmailStageChange}
-				>
-					{constants.CTA_TEXT}
-				</Button>
+				<div className="items-cente flex w-full justify-between text-sm">
+					<span className="font-medium text-gray-light">
+						Already have an account?{' '}
+						<span className="cursor-pointer font-normal text-white underline underline-offset-2">
+							Sign in
+						</span>
+					</span>
+					<Button
+						disabled={
+							!!(userDetail.emailError || userDetail.nameError) ||
+							isRequestOtpLoading
+						}
+						onClick={handleEmailStageChange}
+					>
+						{isRequestOtpLoading && (
+							<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+						)}
+						{isRequestOtpLoading ? 'Please wait' : constants.CTA_TEXT}
+					</Button>
+				</div>
 			</DialogFooter>
 		</>
 	);

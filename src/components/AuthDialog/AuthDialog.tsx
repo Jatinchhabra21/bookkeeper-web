@@ -1,33 +1,36 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '../../../components/ui/dialog';
-import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { DialogStage } from '../../constants/SignUpDialog.constants';
+import { useAppDispatch } from '../../store/hooks';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
 import UserDetailDialogContent from '../UserDetailDialogContent/UserDetailDialogContent';
 import OtpDialogContent from '../OtpDialogContent/OtpDialogContent';
 import { setUserEmail } from '../../store/slices/authSlice';
 
-export default function SignUpDialog() {
-	const [signUpDialogStage, setSignUpDialogStage] = useState<SignUpDialogStage>(
-		SignUpDialogStage.USER_DETAIL
-	);
+export type AuthDialogProps = {
+	initialDialogStage: DialogStage;
+	isVisible: boolean;
+};
 
-	const isSignUpDialogVisible = useAppSelector(
-		(state) => state.global.isSignUpDialogVisible
-	);
+export default function AuthDialog({
+	initialDialogStage,
+	isVisible,
+}: AuthDialogProps) {
+	const [dialogStage, setDialogStage] =
+		useState<DialogStage>(initialDialogStage);
 
 	const dispatch = useAppDispatch();
 
 	function getDialogContent() {
-		switch (signUpDialogStage) {
-			case SignUpDialogStage.USER_DETAIL:
+		switch (dialogStage) {
+			case DialogStage.USER_DETAIL:
 				return (
 					<UserDetailDialogContent
-						updateCurrentDialogStage={setSignUpDialogStage}
-						nextDialogStage={SignUpDialogStage.OTP}
+						updateCurrentDialogStage={setDialogStage}
+						nextDialogStage={DialogStage.OTP}
 					/>
 				);
-			case SignUpDialogStage.OTP:
+			case DialogStage.OTP:
 				return <OtpDialogContent />;
 		}
 	}
@@ -38,7 +41,7 @@ export default function SignUpDialog() {
 	}
 
 	return (
-		<Dialog open={isSignUpDialogVisible} onOpenChange={componentWillUnmount}>
+		<Dialog open={isVisible} onOpenChange={componentWillUnmount}>
 			<DialogContent>{getDialogContent()}</DialogContent>
 		</Dialog>
 	);

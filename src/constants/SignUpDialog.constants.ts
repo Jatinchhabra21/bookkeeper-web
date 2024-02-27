@@ -3,7 +3,7 @@ export default Object.freeze({
 	EMAIL: 'Email',
 });
 
-export enum SignUpDialogStage {
-	USER_DETAIL = '0',
-	OTP = '1',
+export enum DialogStage {
+	USER_DETAIL,
+	OTP,
 }
