@@ -9,9 +9,13 @@ import {
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import constants from '../../constants/OtpDialogContent.constants';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
-import { DialogStage } from '../../constants/SignUpDialog.constants';
+import { DialogStage } from '../../constants/AuthDialog.constants';
 import { OTPInput, SlotProps } from 'input-otp';
 import { cn } from '../../../lib/utils';
+import { useCreateUserMutation } from '../../store/slices/apiSlice';
+import { CreateUserRequest } from '../../store/apiSlice.types';
+import { useToast } from '../../../components/ui/use-toast';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 type OtpFieldStateType = {
 	value: string;
@@ -27,23 +31,40 @@ export default function OtpDialogContent({
 	nextDialogStage,
 }: OtpDialogContentProps) {
 	const dispatch = useAppDispatch();
+	const [createUser, { isLoading }] = useCreateUserMutation();
+	const { toast } = useToast();
 
 	const [otpField, setOtpField] = useState<OtpFieldStateType>(
 		{} as OtpFieldStateType
 	);
 
-	useEffect(() => {
-		console.log(otpField.value);
-	}, [otpField.value]);
-
-	const userEmail = useAppSelector((state) => state.auth.email);
+	const signUpDetails = useAppSelector((state) => state.auth.signUpDetails);
 
 	const handleOtpStageChange = () => {
 		if (!otpField.value)
 			setOtpField((prev) => {
 				return { ...prev, error: constants.OTP_REQUIRED };
 			});
-		dispatch(toggleIsSignUpDialogVisible());
+
+		createUser({
+			displayName: signUpDetails.name,
+			email: signUpDetails.email,
+			password: signUpDetails.password,
+			otp: otpField.value,
+			userPreference: {
+				dailyReminder: false,
+				defaultCurrency: 'INR',
+				defaultTheme: 'Default',
+			},
+		} as unknown as CreateUserRequest)
+			.unwrap()
+			.then(() => dispatch(toggleIsSignUpDialogVisible()))
+			.catch((error) => {
+				toast({
+					title: 'Uh oh! Something went wrong.',
+					description: error.data.ErrorMessage,
+				});
+			});
 	};
 
 	function Slot(props: SlotProps) {
@@ -67,7 +88,7 @@ export default function OtpDialogContent({
 
 	function FakeCaret() {
 		return (
-			<div className="animate-caret-blink pointer-events-none absolute inset-0 flex items-center justify-center">
+			<div className="pointer-events-none absolute inset-0 flex animate-caret-blink items-center justify-center">
 				<div className="h-8 w-px bg-white" />
 			</div>
 		);
@@ -77,7 +98,7 @@ export default function OtpDialogContent({
 		<>
 			<DialogHeader>
 				<DialogTitle>
-					{constants.DIALOG_TITLE} {userEmail}
+					{constants.DIALOG_TITLE} {signUpDetails.email}
 				</DialogTitle>
 			</DialogHeader>
 			<div className="my-2 flex flex-col gap-1">
@@ -102,7 +123,8 @@ export default function OtpDialogContent({
 			</div>
 			<DialogFooter>
 				<Button disabled={!otpField.value} onClick={handleOtpStageChange}>
-					{constants.CTA_TEXT}
+					{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+					{isLoading ? 'Please wait' : constants.CTA_TEXT}
 				</Button>
 			</DialogFooter>
 		</>

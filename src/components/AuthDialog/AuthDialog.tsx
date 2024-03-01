@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '../../../components/ui/dialog';
-import { DialogStage } from '../../constants/SignUpDialog.constants';
+import { DialogStage } from '../../constants/AuthDialog.constants';
 import { useAppDispatch } from '../../store/hooks';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
 import UserDetailDialogContent from '../UserDetailDialogContent/UserDetailDialogContent';
 import OtpDialogContent from '../OtpDialogContent/OtpDialogContent';
-import { setUserEmail } from '../../store/slices/authSlice';
+import { setSignUpDetails } from '../../store/slices/authSlice';
 
 export type AuthDialogProps = {
 	initialDialogStage: DialogStage;
@@ -36,8 +36,8 @@ export default function AuthDialog({
 	}
 
 	function componentWillUnmount() {
+		dispatch(setSignUpDetails(undefined));
 		dispatch(toggleIsSignUpDialogVisible());
-		dispatch(setUserEmail(''));
 	}
 
 	return (

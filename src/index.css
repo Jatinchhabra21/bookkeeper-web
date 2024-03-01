@@ -66,6 +66,10 @@ a {
 	border-radius: 8px;
 }
 
+input {
+	font-family: Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 /* for chrome */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {

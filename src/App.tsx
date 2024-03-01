@@ -5,7 +5,8 @@ import { Size } from './components/Spinner/Spinner.types';
 import { useAppSelector } from './store/hooks';
 import HomePage from './pages/HomePage';
 import AuthDialog from './components/AuthDialog/AuthDialog';
-import { DialogStage } from './constants/SignUpDialog.constants';
+import { DialogStage } from './constants/AuthDialog.constants';
+import { Toaster } from '../components/ui/toaster';
 
 export default function App() {
 	const isSignUpDialogVisible = useAppSelector(
@@ -14,6 +15,7 @@ export default function App() {
 
 	return (
 		<Suspense fallback={<FullPageSpinner size={Size.normal} />}>
+			<Toaster />
 			{isSignUpDialogVisible && (
 				<AuthDialog
 					initialDialogStage={DialogStage.USER_DETAIL}
