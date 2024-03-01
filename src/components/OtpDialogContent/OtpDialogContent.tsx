@@ -62,7 +62,7 @@ export default function OtpDialogContent({
 			.catch((error) => {
 				toast({
 					title: 'Uh oh! Something went wrong.',
-					description: error.data.ErrorMessage,
+					description: error.data.errorMessage,
 				});
 			});
 	};

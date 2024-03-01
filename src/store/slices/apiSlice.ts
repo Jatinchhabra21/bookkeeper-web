@@ -40,14 +40,14 @@ export const bookkeeperApi = createApi({
 		}),
 		requestAccountActivationOtp: builder.mutation({
 			query: (request: OtpRequest) => ({
-				url: 'otp/account-activation',
+				url: 'otp/account/activation',
 				body: request,
 				method: 'POST',
 			}),
 		}),
 		requestResetPasswordOtp: builder.mutation({
 			query: (request: OtpRequest) => ({
-				url: 'otp/reset-password',
+				url: 'otp/account/reset',
 				body: request,
 				method: 'POST',
 			}),
