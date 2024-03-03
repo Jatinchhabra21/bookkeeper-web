@@ -9,7 +9,7 @@ import {
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import constants from '../../constants/OtpDialogContent.constants';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
-import { DialogStage } from '../../constants/AuthDialog.constants';
+import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
 import { OTPInput, SlotProps } from 'input-otp';
 import { cn } from '../../../lib/utils';
 import { useCreateUserMutation } from '../../store/slices/apiSlice';
@@ -23,7 +23,7 @@ type OtpFieldStateType = {
 
 export type OtpDialogContentProps = {
 	updateCurrentDialogStage?: (email: React.SetStateAction<any>) => void;
-	nextDialogStage?: DialogStage;
+	nextDialogStage?: SignUpDialogStage;
 };
 
 export default function OtpDialogContent({
@@ -58,12 +58,14 @@ export default function OtpDialogContent({
 			},
 		} as unknown as CreateUserRequest)
 			.unwrap()
-			.then(() => dispatch(toggleIsSignUpDialogVisible()))
 			.catch((error) => {
 				toast({
 					title: 'Uh oh! Something went wrong.',
 					description: error.data.errorMessage,
 				});
+			})
+			.finally(() => {
+				dispatch(toggleIsSignUpDialogVisible());
 			});
 	};
 
@@ -122,7 +124,10 @@ export default function OtpDialogContent({
 				</div>
 			</div>
 			<DialogFooter>
-				<Button disabled={!otpField.value} onClick={handleOtpStageChange}>
+				<Button
+					disabled={!otpField.value || isLoading}
+					onClick={handleOtpStageChange}
+				>
 					{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
 					{isLoading ? 'Please wait' : constants.CTA_TEXT}
 				</Button>

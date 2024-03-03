@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { DialogStage } from '../../constants/AuthDialog.constants';
-import constants from '../../constants/EmailDialogContent.constants';
+import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
+import constants from '../../constants/UserDetailDialogContent.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
 	SignUpDetailsType,
@@ -31,24 +31,26 @@ type UserDetailStateType = {
 };
 
 export type UserDetailDialogContentProps = {
-	updateCurrentDialogStage: (email: React.SetStateAction<any>) => void;
-	nextDialogStage: DialogStage;
+	updateCurrentDialogStage: (value: React.SetStateAction<any>) => void;
+	nextDialogStage: SignUpDialogStage;
 };
 
 export default function UserDetailDialogContent({
 	updateCurrentDialogStage,
 	nextDialogStage,
 }: UserDetailDialogContentProps) {
+	// redux state
 	const userEmail = useAppSelector((state) => state.auth.signUpDetails.email);
-	const { toast } = useToast();
+	const { toast } = useToast(); // shadcn ui hook
 
 	const [
 		requestOtp,
 		{ isLoading: isRequestOtpLoading, isError: isRequestOtpError },
-	] = useRequestAccountActivationOtpMutation();
+	] = useRequestAccountActivationOtpMutation(); // rtk mutation hook
 
-	const dispatch = useAppDispatch();
+	const dispatch = useAppDispatch(); // dispatch hook
 
+	// state
 	const [userDetail, setUserDetail] = useState<UserDetailStateType>({
 		email: userEmail,
 		password: '',
@@ -331,8 +333,12 @@ export default function UserDetailDialogContent({
 					</span>
 					<Button
 						disabled={
-							!!(userDetail.emailError || userDetail.nameError) ||
-							isRequestOtpLoading
+							!!(
+								userDetail.emailError ||
+								userDetail.nameError ||
+								userDetail.passwordError ||
+								userDetail.repeatPasswordError
+							) || isRequestOtpLoading
 						}
 						onClick={handleEmailStageChange}
 						className={'text-xs sm:text-sm'}

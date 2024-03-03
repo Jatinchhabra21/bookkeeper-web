@@ -4,5 +4,5 @@ export default Object.freeze({
 	OTP_REQUIRED: 'Please enter OTP sent to your email',
 	DIALOG_TITLE: 'OTP is sent to',
 	OTP_INPUT_PLACEHOLDER: 'OTP',
-	CTA_TEXT: 'Create account',
+	CTA_TEXT: 'Submit',
 });

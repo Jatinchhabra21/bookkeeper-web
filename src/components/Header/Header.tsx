@@ -7,7 +7,10 @@ import { Button } from '../../../components/ui/button';
 import heroConstants from '../../constants/Hero.constants';
 import headerConstants from '../../constants/Header.constants';
 import { useAppDispatch } from '../../store/hooks';
-import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
+import {
+	toggleIsLogInDialogVisible,
+	toggleIsSignUpDialogVisible,
+} from '../../store/slices/globalSlice';
 
 export default function Header() {
 	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
@@ -67,7 +70,12 @@ export default function Header() {
 						>
 							{heroConstants.SIGNUP_CTA_TEXT}
 						</Button>
-						<Button variant="secondary">{heroConstants.LOGIN_CTA_TEXT}</Button>
+						<Button
+							variant="secondary"
+							onClick={() => dispatch(toggleIsLogInDialogVisible())}
+						>
+							{heroConstants.LOGIN_CTA_TEXT}
+						</Button>
 					</div>
 				</aside>
 			</div>

@@ -11,6 +11,7 @@ export const bookkeeperApi = createApi({
 		baseUrl: 'https://bookkeeper.azurewebsites.net/api',
 	}),
 	endpoints: (builder) => ({
+		// USER
 		getUser: builder.query({
 			query: () => 'me/account',
 		}),
