@@ -1,15 +1,35 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+	BaseQueryFn,
+	FetchArgs,
+	FetchBaseQueryError,
+	createApi,
+	fetchBaseQuery,
+} from '@reduxjs/toolkit/query/react';
 import {
 	CreateUserRequest,
+	ErrorResponseType,
 	OtpRequest,
 	ResetPasswordRequest,
 	UserPreference,
+	LoginRequestType,
+	LoginResponseType,
 } from '../apiSlice.types';
+import Cookies from 'js-cookie';
+
+const baseQuery = fetchBaseQuery({
+	baseUrl: 'https://bookkeeper.azurewebsites.net/api',
+	prepareHeaders: (headers) => {
+		const token = Cookies.get('token');
+
+		if (token) {
+			headers.set('authorization', `Bearer ${token}`);
+		}
+		return headers;
+	},
+});
 
 export const bookkeeperApi = createApi({
-	baseQuery: fetchBaseQuery({
-		baseUrl: 'https://bookkeeper.azurewebsites.net/api',
-	}),
+	baseQuery,
 	endpoints: (builder) => ({
 		// USER
 		getUser: builder.query({
@@ -53,6 +73,20 @@ export const bookkeeperApi = createApi({
 				method: 'POST',
 			}),
 		}),
+		// AUTH
+		getAccessToken: builder.mutation({
+			query: (request: LoginRequestType) => ({
+				url: 'oauth2/token',
+				body: request,
+				method: 'POST',
+			}),
+			transformResponse: (response: LoginResponseType) => {
+				Cookies.set('token', response.accessToken, {
+					expires: 14,
+					secure: true,
+				});
+			},
+		}),
 	}),
 });
 
@@ -64,4 +98,5 @@ export const {
 	useRequestAccountActivationOtpMutation,
 	useRequestResetPasswordOtpMutation,
 	useResetPasswordMutation,
+	useGetAccessTokenMutation,
 } = bookkeeperApi;

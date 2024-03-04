@@ -5,4 +5,5 @@ export default Object.freeze({
 	PASSWORD_INPUT_PLACEHOLDER: 'Password',
 	DIALOG_TITLE: 'Log In',
 	CTA_TEXT: 'Log in',
+	PASSWORD_REQUIRED: 'Password is required',
 });

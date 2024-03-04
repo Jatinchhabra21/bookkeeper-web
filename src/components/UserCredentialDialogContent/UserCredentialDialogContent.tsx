@@ -10,6 +10,11 @@ import {
 } from '../../../components/ui/dialog';
 import { Button } from '../../../components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { useGetAccessTokenMutation } from '../../store/slices/apiSlice';
+import { LoginRequestType } from '../../store/apiSlice.types';
+import { useToast } from '../../../components/ui/use-toast';
+import { useAppDispatch } from '../../store/hooks';
+import { toggleIsLogInDialogVisible } from '../../store/slices/globalSlice';
 
 export type UserCredentialDialogContentPropType = {
 	updateCurrentDialogStage: (value: React.SetStateAction<any>) => void;
@@ -20,12 +25,22 @@ export type UserCredentialtateType = {
 	email: string;
 	password: string;
 	emailError?: string;
+	passwordError?: string;
 };
 
 export default function UserCredentialDialogContent() {
 	const [userCredential, setUserCredential] = useState<UserCredentialtateType>(
 		{} as UserCredentialtateType
 	);
+
+	const dispatch = useAppDispatch();
+
+	const { toast } = useToast();
+
+	const [
+		getAccessToken,
+		{ isLoading: isGetAccessTokenLoading, error: getAccessTokenError },
+	] = useGetAccessTokenMutation();
 
 	const handleEmailFieldError = () => {
 		if (!userCredential.email) {
@@ -41,6 +56,39 @@ export default function UserCredentialDialogContent() {
 				return { ...prev, emailError: undefined };
 			});
 	};
+
+	function handleLogin() {
+		if (!userCredential.email) {
+			setUserCredential((prev) => {
+				return {
+					...prev,
+					emailError: constants.EMAIL_REQUIRED,
+				};
+			});
+			return;
+		}
+		if (!userCredential.password) {
+			setUserCredential((prev) => {
+				return {
+					...prev,
+					passwordError: constants.PASSWORD_REQUIRED,
+				};
+			});
+			return;
+		}
+		getAccessToken({
+			email: userCredential.email,
+			password: userCredential.password,
+		} as LoginRequestType)
+			.unwrap()
+			.catch((error) => {
+				toast({
+					title: 'Uh oh! Something went wrong.',
+					description: error.data.errorMessage,
+				});
+			})
+			.finally(() => dispatch(toggleIsLogInDialogVisible()));
+	}
 
 	return (
 		<>
@@ -83,14 +131,14 @@ export default function UserCredentialDialogContent() {
 			</div>
 			<DialogFooter>
 				<Button
-					disabled={!!userCredential.emailError}
+					disabled={!!userCredential.emailError || isGetAccessTokenLoading}
 					className={'text-xs sm:text-sm'}
+					onClick={handleLogin}
 				>
-					{/* {isRequestOtpLoading && (
+					{isGetAccessTokenLoading && (
 						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
 					)}
-					{isRequestOtpLoading ? 'Please wait' : constants.CTA_TEXT} */}
-					{constants.CTA_TEXT}
+					{isGetAccessTokenLoading ? 'Please wait' : constants.CTA_TEXT}
 				</Button>
 			</DialogFooter>
 		</>

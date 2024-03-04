@@ -29,3 +29,19 @@ export type ResetPasswordRequest =
 export type OtpRequest = {
 	email: string;
 };
+
+export type ErrorResponseType = {
+	errorMessage: string;
+	statusCode: number;
+};
+
+export type LoginRequestType = {
+	email: string;
+	password: string;
+};
+
+export type LoginResponseType = {
+	accessToken: string;
+	expiresAt: Date;
+	tokenId: string;
+};
