@@ -1,43 +1,43 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '../../../components/ui/dialog';
-import { DialogStage } from '../../constants/SignUpDialog.constants';
+import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
 import { useAppDispatch } from '../../store/hooks';
 import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
 import UserDetailDialogContent from '../UserDetailDialogContent/UserDetailDialogContent';
 import OtpDialogContent from '../OtpDialogContent/OtpDialogContent';
-import { setUserEmail } from '../../store/slices/authSlice';
+import { setSignUpDetails } from '../../store/slices/authSlice';
 
-export type AuthDialogProps = {
-	initialDialogStage: DialogStage;
+export type SignUpDialogProps = {
+	initialDialogStage: SignUpDialogStage;
 	isVisible: boolean;
 };
 
-export default function AuthDialog({
+export default function SignUpDialog({
 	initialDialogStage,
 	isVisible,
-}: AuthDialogProps) {
+}: SignUpDialogProps) {
 	const [dialogStage, setDialogStage] =
-		useState<DialogStage>(initialDialogStage);
+		useState<SignUpDialogStage>(initialDialogStage);
 
 	const dispatch = useAppDispatch();
 
 	function getDialogContent() {
 		switch (dialogStage) {
-			case DialogStage.USER_DETAIL:
+			case SignUpDialogStage.USER_DETAIL:
 				return (
 					<UserDetailDialogContent
 						updateCurrentDialogStage={setDialogStage}
-						nextDialogStage={DialogStage.OTP}
+						nextDialogStage={SignUpDialogStage.OTP}
 					/>
 				);
-			case DialogStage.OTP:
+			case SignUpDialogStage.OTP:
 				return <OtpDialogContent />;
 		}
 	}
 
 	function componentWillUnmount() {
+		dispatch(setSignUpDetails(undefined));
 		dispatch(toggleIsSignUpDialogVisible());
-		dispatch(setUserEmail(''));
 	}
 
 	return (

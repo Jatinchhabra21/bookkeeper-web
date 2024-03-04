@@ -1,9 +1,4 @@
-export default Object.freeze({
-	SIGN_UP_CTA: 'Sign Up',
-	EMAIL: 'Email',
-});
-
-export enum DialogStage {
+export enum SignUpDialogStage {
 	USER_DETAIL,
 	OTP,
 }

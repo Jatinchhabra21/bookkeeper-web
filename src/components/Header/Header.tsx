@@ -7,7 +7,10 @@ import { Button } from '../../../components/ui/button';
 import heroConstants from '../../constants/Hero.constants';
 import headerConstants from '../../constants/Header.constants';
 import { useAppDispatch } from '../../store/hooks';
-import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
+import {
+	toggleIsLogInDialogVisible,
+	toggleIsSignUpDialogVisible,
+} from '../../store/slices/globalSlice';
 
 export default function Header() {
 	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
@@ -52,7 +55,7 @@ export default function Header() {
 					</div>
 				</div>
 				<aside
-					className={`navbar fixed right-0 top-0 z-40 flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between gap-10 bg-gray-dark px-8 font-light text-white ${isNavExpanded ? 'flex' : 'hidden'} sm:static sm:flex sm:h-fit sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0 `}
+					className={`navbar fixed right-0 top-0 z-40 flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between gap-10 bg-gray-dark px-8 font-light text-white ${isNavExpanded ? 'flex' : 'hidden'} sm:static sm:flex sm:h-fit sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0`}
 				>
 					<nav className="z-40 flex flex-col gap-6 sm:flex-row">
 						<Navlink text={headerConstants.NAV_LINK_TRANSACTIONS} />
@@ -67,7 +70,12 @@ export default function Header() {
 						>
 							{heroConstants.SIGNUP_CTA_TEXT}
 						</Button>
-						<Button variant="secondary">{heroConstants.LOGIN_CTA_TEXT}</Button>
+						<Button
+							variant="secondary"
+							onClick={() => dispatch(toggleIsLogInDialogVisible())}
+						>
+							{heroConstants.LOGIN_CTA_TEXT}
+						</Button>
 					</div>
 				</aside>
 			</div>

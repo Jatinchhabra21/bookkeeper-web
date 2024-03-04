@@ -4,7 +4,10 @@ import { Button } from '../../../components/ui/button';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAppDispatch } from '../../store/hooks';
-import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
+import {
+	toggleIsLogInDialogVisible,
+	toggleIsSignUpDialogVisible,
+} from '../../store/slices/globalSlice';
 import headerConstants from '../../constants/Header.constants';
 
 export default function Hero() {
@@ -54,7 +57,12 @@ export default function Hero() {
 				>
 					{constants.SIGNUP_CTA_TEXT}
 				</Button>
-				<Button variant="outline">{constants.LOGIN_CTA_TEXT}</Button>
+				<Button
+					variant="outline"
+					onClick={() => dispatch(toggleIsLogInDialogVisible())}
+				>
+					{constants.LOGIN_CTA_TEXT}
+				</Button>
 			</div>
 		</div>
 	);

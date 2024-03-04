@@ -1,10 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { DialogStage } from '../../constants/SignUpDialog.constants';
-import constants from '../../constants/EmailDialogContent.constants';
+import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
+import constants from '../../constants/UserDetailDialogContent.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setUserEmail, setUserName } from '../../store/slices/authSlice';
+import {
+	SignUpDetailsType,
+	setSignUpDetails,
+} from '../../store/slices/authSlice';
 import {
 	DialogFooter,
 	DialogHeader,
@@ -13,6 +16,8 @@ import {
 import { useRequestAccountActivationOtpMutation } from '../../store/slices/apiSlice';
 import { OtpRequest } from '../../store/apiSlice.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import PasswordInput from '../PasswordInput/PasswordInput';
+import { useToast } from '../../../components/ui/use-toast';
 
 type UserDetailStateType = {
 	email: string;
@@ -26,25 +31,26 @@ type UserDetailStateType = {
 };
 
 export type UserDetailDialogContentProps = {
-	updateCurrentDialogStage: (email: React.SetStateAction<any>) => void;
-	nextDialogStage: DialogStage;
+	updateCurrentDialogStage: (value: React.SetStateAction<any>) => void;
+	nextDialogStage: SignUpDialogStage;
 };
 
 export default function UserDetailDialogContent({
 	updateCurrentDialogStage,
 	nextDialogStage,
 }: UserDetailDialogContentProps) {
-	const userEmail = useAppSelector((state) => state.auth.email);
+	// redux state
+	const userEmail = useAppSelector((state) => state.auth.signUpDetails.email);
+	const { toast } = useToast(); // shadcn ui hook
 
 	const [
 		requestOtp,
 		{ isLoading: isRequestOtpLoading, isError: isRequestOtpError },
-	] = useRequestAccountActivationOtpMutation();
+	] = useRequestAccountActivationOtpMutation(); // rtk mutation hook
 
-	useEffect(() => console.log(isRequestOtpLoading), [isRequestOtpLoading]);
+	const dispatch = useAppDispatch(); // dispatch hook
 
-	const dispatch = useAppDispatch();
-
+	// state
 	const [userDetail, setUserDetail] = useState<UserDetailStateType>({
 		email: userEmail,
 		password: '',
@@ -202,12 +208,23 @@ export default function UserDetailDialogContent({
 		}
 
 		if (!isError) {
-			dispatch(setUserEmail(userDetail.email));
-			dispatch(setUserName(userDetail.name));
+			dispatch(
+				setSignUpDetails({
+					name: userDetail.name,
+					email: userDetail.email,
+					password: userDetail.password,
+				} as SignUpDetailsType)
+			);
 			requestOtp({ email: userDetail.email } as OtpRequest)
 				.unwrap()
 				.then(() => {
 					updateCurrentDialogStage(nextDialogStage);
+				})
+				.catch((error) => {
+					toast({
+						title: 'Uh oh! Something went wrong.',
+						description: error.data.ErrorMessage,
+					});
 				});
 		}
 	};
@@ -263,8 +280,7 @@ export default function UserDetailDialogContent({
 			</div>
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-col gap-1">
-					<Input
-						type="password"
+					<PasswordInput
 						placeholder={constants.PASSWORD_INPUT_PLACEHOLDER}
 						value={userDetail.password}
 						onChange={(event: ChangeEvent<HTMLInputElement>) =>
@@ -273,7 +289,7 @@ export default function UserDetailDialogContent({
 							})
 						}
 						onBlur={handlePasswordFieldError}
-						className={`${userDetail.passwordError ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1`}
+						error={userDetail.passwordError}
 						required
 						aria-required
 					/>
@@ -284,8 +300,7 @@ export default function UserDetailDialogContent({
 					)}
 				</div>
 				<div className="flex flex-col gap-1">
-					<Input
-						type="password"
+					<PasswordInput
 						placeholder={constants.REPEAT_PASSWORD_INPUT_PLACEHOLDER}
 						value={userDetail.repeatPassword}
 						onChange={(event) => {
@@ -297,7 +312,7 @@ export default function UserDetailDialogContent({
 							});
 						}}
 						onBlur={handleRepeatPasswordError}
-						className={`${userDetail.repeatPasswordError ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1`}
+						error={userDetail.repeatPasswordError}
 						required
 						aria-required
 					/>
@@ -309,7 +324,7 @@ export default function UserDetailDialogContent({
 				</div>
 			</div>
 			<DialogFooter>
-				<div className="items-cente flex w-full justify-between text-sm">
+				<div className="items-cente flex w-full items-center justify-between text-sm">
 					<span className="font-medium text-gray-light">
 						Already have an account?{' '}
 						<span className="cursor-pointer font-normal text-white underline underline-offset-2">
@@ -318,10 +333,15 @@ export default function UserDetailDialogContent({
 					</span>
 					<Button
 						disabled={
-							!!(userDetail.emailError || userDetail.nameError) ||
-							isRequestOtpLoading
+							!!(
+								userDetail.emailError ||
+								userDetail.nameError ||
+								userDetail.passwordError ||
+								userDetail.repeatPasswordError
+							) || isRequestOtpLoading
 						}
 						onClick={handleEmailStageChange}
+						className={'text-xs sm:text-sm'}
 					>
 						{isRequestOtpLoading && (
 							<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
