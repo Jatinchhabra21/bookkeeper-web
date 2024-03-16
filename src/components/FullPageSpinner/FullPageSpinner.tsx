@@ -8,7 +8,7 @@ export type FullPageSpinnerPropType = {
 
 export default function FullPageSpinner({ size }: FullPageSpinnerPropType) {
 	return (
-		<div className="z-50 flex h-screen w-screen items-center justify-center">
+		<div className="z-10 flex h-screen w-screen items-center justify-center">
 			<Spinner size={size} />
 		</div>
 	);

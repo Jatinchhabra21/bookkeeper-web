@@ -16,8 +16,7 @@
 	transform-origin: bottom right;
 }
 
-.hover-underline:hover::after,
-.hover-underline:focus::after {
+.hover-underline:hover::after {
 	transform: scaleX(1);
 	transform-origin: bottom left;
 }
