@@ -24,7 +24,6 @@ export default function Header() {
 			gsap.to('.bar-3', { rotate: 45, y: -10 });
 			gsap.to('.navbar', {
 				translateX: '0',
-				opacity: 1,
 				duration: 0.35,
 			});
 			setIsNavExpanded(true);
@@ -34,7 +33,6 @@ export default function Header() {
 			gsap.to('.bar-3', { rotate: 0, y: 0 });
 			gsap.to('.navbar', {
 				translateX: '100%',
-				opacity: 0.5,
 				duration: 0.35,
 				onComplete: () => setIsNavExpanded(false),
 			});
@@ -42,23 +40,26 @@ export default function Header() {
 	});
 
 	return (
-		<header className="sticky w-screen border-b-slate-400 text-white backdrop-blur">
-			<div className="flex items-center justify-between bg-gray-dark bg-opacity-50 p-4">
+		<header className="sticky top-0 z-10 mb-8 w-screen border-b border-border/10 border-b-slate-800 bg-[#020817]/60 text-white sm:mb-16 ">
+			<div className="flex items-center justify-between px-8 py-4 backdrop-blur supports-[backdrop-filter]:bg-[#020817]/60">
 				<span className="cursor-pointer text-base font-medium">
 					<a href="/">{headerConstants.BOOKKEEPER}</a>
 				</span>
 				<div className="flex items-center justify-between sm:hidden">
-					<div className="z-50 " onClick={handleHamburgerClick}>
+					<div className="z-[9999]" onClick={handleHamburgerClick}>
 						<div className="bar bar-1 bg-white"></div>
 						<div className="bar bar-2 bg-white"></div>
 						<div className="bar bar-3 bg-white"></div>
 					</div>
 				</div>
 				<aside
-					className={`navbar fixed right-0 top-0 z-40 flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between gap-10 bg-gray-dark px-8 font-light text-white ${isNavExpanded ? 'flex' : 'hidden'} sm:static sm:flex sm:h-fit sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0`}
+					className={`navbar absolute right-0 top-0 z-[1000] flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between gap-10 bg-[#020817] px-8 font-light text-white ${!isNavExpanded && 'hidden'} sm:static sm:flex sm:h-fit sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0`}
 				>
-					<nav className="z-40 flex flex-col gap-6 sm:flex-row">
-						<Navlink text={headerConstants.NAV_LINK_TRANSACTIONS} />
+					<nav className="flex flex-col gap-6 sm:flex-row">
+						<Navlink
+							text={headerConstants.NAV_LINK_TRANSACTIONS}
+							url="/transactions"
+						/>
 						<Navlink text={headerConstants.NAV_LINK_GOALS} />
 						<Navlink text={headerConstants.NAV_LINK_BUDGET} />
 						<Navlink text={headerConstants.NAV_LINK_BILLS} />

@@ -9,7 +9,9 @@ import { SignUpDialogStage } from './constants/SignUpDialog.constants';
 import { Toaster } from '../components/ui/toaster';
 import LogInDialog from './components/LogInDialog/LogInDialog';
 import { LogInDialogStage } from './constants/LogInDialog.constants';
+import Transactions from './pages/Transactions';
 
+// TODO: Resolve z-index and positioning issue which causes page content to hide navbar which shouldn't be happening
 export default function App() {
 	const { isSignUpDialogVisible, isLogInDialogVisible } = useAppSelector(
 		(state) => state.global
@@ -30,13 +32,14 @@ export default function App() {
 					isVisible={isLogInDialogVisible}
 				/>
 			)}
-			<div className="flex h-screen flex-col">
+			<div className="relative flex h-screen flex-col overflow-x-hidden">
 				<Header />
-				<BrowserRouter>
+				<div>
 					<Routes>
 						<Route path="/" element={<HomePage />} />
+						<Route path="/transactions" element={<Transactions />} />
 					</Routes>
-				</BrowserRouter>
+				</div>
 			</div>
 		</Suspense>
 	);
