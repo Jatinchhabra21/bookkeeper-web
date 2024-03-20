@@ -5,8 +5,8 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useAppDispatch } from '../../store/hooks';
 import {
-	toggleIsLogInDialogVisible,
-	toggleIsSignUpDialogVisible,
+	setIsLogInVisible,
+	setIsSignUpVisible,
 } from '../../store/slices/globalSlice';
 import headerConstants from '../../constants/Header.constants';
 
@@ -38,28 +38,28 @@ export default function Hero() {
 	});
 
 	return (
-		<div className=" background-img mx-auto my-16 text-slate-100 sm:w-4/5">
-			<h1 className="mb-4 text-2xl font-thin text-slate-400 md:text-3xl lg:text-4xl">
+		<div className=" background-img mx-auto my-16 text-slate-100 sm:my-16 sm:w-4/5 md:my-12">
+			<h1 className="mb-4 text-2xl font-thin text-slate-400 md:text-3xl xl:text-4xl">
 				{headerConstants.BOOKKEEPER}
 			</h1>
 			<div className="blob relative -z-10">
 				<div className="blob-1 absolute -left-4 -top-2 -z-20 h-5/6 w-9/12 rounded-full bg-purple-500 opacity-35 mix-blend-multiply blur-2xl filter"></div>
 				<div className="blob-2 absolute right-4 top-8 -z-20 h-5/6 w-9/12 rounded-full bg-emerald-500 opacity-35 mix-blend-multiply blur-2xl filter"></div>
 				<div className="blob-3 absolute -bottom-8 left-0 -z-20 h-5/6 w-9/12 rounded-full bg-yellow-500 opacity-35 mix-blend-multiply blur-2xl filter"></div>
-				<p className="mb-8 text-3xl font-medium sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+				<p className="mb-8 text-3xl font-medium sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl">
 					{constants.TAGLINE}
 				</p>
 			</div>
 			<div className="flex gap-8">
 				<Button
 					variant="default"
-					onClick={() => dispatch(toggleIsSignUpDialogVisible())}
+					onClick={() => dispatch(setIsSignUpVisible(true))}
 				>
 					{constants.SIGNUP_CTA_TEXT}
 				</Button>
 				<Button
 					variant="outline"
-					onClick={() => dispatch(toggleIsLogInDialogVisible())}
+					onClick={() => dispatch(setIsLogInVisible(true))}
 				>
 					{constants.LOGIN_CTA_TEXT}
 				</Button>

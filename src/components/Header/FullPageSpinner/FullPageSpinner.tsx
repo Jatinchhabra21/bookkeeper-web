@@ -1,6 +1,6 @@
 import React from 'react';
-import Spinner from '../Spinner/Spinner';
-import { Size } from '../Spinner/Spinner.types';
+import Spinner from '../../Spinner/Spinner';
+import { Size } from '../../Spinner/Spinner.types';
 
 export type FullPageSpinnerPropType = {
 	size: Size;

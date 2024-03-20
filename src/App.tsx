@@ -10,8 +10,8 @@ import { Toaster } from '../components/ui/toaster';
 import LogInDialog from './components/LogInDialog/LogInDialog';
 import { LogInDialogStage } from './constants/LogInDialog.constants';
 import Transactions from './pages/Transactions';
+import { AuthProvider, useAuth } from './hooks/useAuth';
 
-// TODO: Resolve z-index and positioning issue which causes page content to hide navbar which shouldn't be happening
 export default function App() {
 	const { isSignUpDialogVisible, isLogInDialogVisible } = useAppSelector(
 		(state) => state.global
@@ -19,28 +19,30 @@ export default function App() {
 
 	return (
 		<Suspense fallback={<FullPageSpinner size={Size.normal} />}>
-			<Toaster />
-			{isSignUpDialogVisible && (
-				<SignUpDialog
-					initialDialogStage={SignUpDialogStage.USER_DETAIL}
-					isVisible={isSignUpDialogVisible}
-				/>
-			)}
-			{isLogInDialogVisible && (
-				<LogInDialog
-					initialDialogStage={LogInDialogStage.USER_CREDENTIAL}
-					isVisible={isLogInDialogVisible}
-				/>
-			)}
-			<div className="relative flex h-screen flex-col overflow-x-hidden">
-				<Header />
-				<div>
-					<Routes>
-						<Route path="/" element={<HomePage />} />
-						<Route path="/transactions" element={<Transactions />} />
-					</Routes>
+			<AuthProvider>
+				<Toaster />
+				{isSignUpDialogVisible && (
+					<SignUpDialog
+						initialDialogStage={SignUpDialogStage.USER_DETAIL}
+						isVisible={isSignUpDialogVisible}
+					/>
+				)}
+				{isLogInDialogVisible && (
+					<LogInDialog
+						initialDialogStage={LogInDialogStage.USER_CREDENTIAL}
+						isVisible={isLogInDialogVisible}
+					/>
+				)}
+				<div className="relative flex h-screen flex-col overflow-x-hidden">
+					<Header />
+					<div>
+						<Routes>
+							<Route path="/" element={<HomePage />} />
+							<Route path="/transactions" element={<Transactions />} />
+						</Routes>
+					</div>
 				</div>
-			</div>
+			</AuthProvider>
 		</Suspense>
 	);
 }

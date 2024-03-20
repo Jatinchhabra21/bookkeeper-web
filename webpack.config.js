@@ -21,6 +21,10 @@ module.exports = {
 				loader: 'ts-loader',
 			},
 			{
+				test: /\.(config)$/,
+				use: ['file-loader'],
+			},
+			{
 				test: /\.css$/i,
 				include: path.resolve(__dirname, 'src'),
 				exclude: '/node_modules',

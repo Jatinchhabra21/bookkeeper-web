@@ -10,11 +10,10 @@ import {
 } from '../../../components/ui/dialog';
 import { Button } from '../../../components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { useGetAccessTokenMutation } from '../../store/slices/apiSlice';
 import { LoginRequestType } from '../../store/apiSlice.types';
 import { useToast } from '../../../components/ui/use-toast';
 import { useAppDispatch } from '../../store/hooks';
-import { toggleIsLogInDialogVisible } from '../../store/slices/globalSlice';
+import { useAuth } from '../../hooks/useAuth';
 
 export type UserCredentialDialogContentPropType = {
 	updateCurrentDialogStage: (value: React.SetStateAction<any>) => void;
@@ -37,10 +36,7 @@ export default function UserCredentialDialogContent() {
 
 	const { toast } = useToast();
 
-	const [
-		getAccessToken,
-		{ isLoading: isGetAccessTokenLoading, error: getAccessTokenError },
-	] = useGetAccessTokenMutation();
+	const { logIn, isLoading } = useAuth();
 
 	const handleEmailFieldError = () => {
 		if (!userCredential.email) {
@@ -76,18 +72,10 @@ export default function UserCredentialDialogContent() {
 			});
 			return;
 		}
-		getAccessToken({
+		logIn({
 			email: userCredential.email,
 			password: userCredential.password,
-		} as LoginRequestType)
-			.unwrap()
-			.catch((error) => {
-				toast({
-					title: 'Uh oh! Something went wrong.',
-					description: error.data.errorMessage,
-				});
-			})
-			.finally(() => dispatch(toggleIsLogInDialogVisible()));
+		});
 	}
 
 	return (
@@ -131,14 +119,12 @@ export default function UserCredentialDialogContent() {
 			</div>
 			<DialogFooter>
 				<Button
-					disabled={!!userCredential.emailError || isGetAccessTokenLoading}
+					disabled={!!userCredential.emailError || isLoading}
 					className={'text-xs sm:text-sm'}
 					onClick={handleLogin}
 				>
-					{isGetAccessTokenLoading && (
-						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-					)}
-					{isGetAccessTokenLoading ? 'Please wait' : constants.CTA_TEXT}
+					{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+					{isLoading ? 'Please wait' : constants.CTA_TEXT}
 				</Button>
 			</DialogFooter>
 		</>

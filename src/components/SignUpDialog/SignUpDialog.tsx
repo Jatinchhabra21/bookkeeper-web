@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent } from '../../../components/ui/dialog';
 import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
 import { useAppDispatch } from '../../store/hooks';
-import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
+import { setIsSignUpVisible } from '../../store/slices/globalSlice';
 import UserDetailDialogContent from '../UserDetailDialogContent/UserDetailDialogContent';
 import OtpDialogContent from '../OtpDialogContent/OtpDialogContent';
 import { setSignUpDetails } from '../../store/slices/authSlice';
@@ -37,7 +37,7 @@ export default function SignUpDialog({
 
 	function componentWillUnmount() {
 		dispatch(setSignUpDetails(undefined));
-		dispatch(toggleIsSignUpDialogVisible());
+		dispatch(setIsSignUpVisible(false));
 	}
 
 	return (

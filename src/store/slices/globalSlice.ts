@@ -14,15 +14,14 @@ export const globalSlice = createSlice({
 	name: 'global',
 	initialState,
 	reducers: {
-		toggleIsSignUpDialogVisible: (state) => {
-			return { ...state, isSignUpDialogVisible: !state.isSignUpDialogVisible };
+		setIsSignUpVisible: (state, { payload }) => {
+			return { ...state, isSignUpDialogVisible: payload };
 		},
-		toggleIsLogInDialogVisible: (state) => {
-			return { ...state, isLogInDialogVisible: !state.isLogInDialogVisible };
+		setIsLogInVisible: (state, { payload }) => {
+			return { ...state, isLogInDialogVisible: payload };
 		},
 	},
 });
 
-export const { toggleIsSignUpDialogVisible, toggleIsLogInDialogVisible } =
-	globalSlice.actions;
+export const { setIsSignUpVisible, setIsLogInVisible } = globalSlice.actions;
 export default globalSlice.reducer;
