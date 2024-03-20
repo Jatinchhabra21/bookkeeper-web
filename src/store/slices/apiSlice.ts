@@ -1,13 +1,6 @@
-import {
-	BaseQueryFn,
-	FetchArgs,
-	FetchBaseQueryError,
-	createApi,
-	fetchBaseQuery,
-} from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
 	CreateUserRequest,
-	ErrorResponseType,
 	OtpRequest,
 	ResetPasswordRequest,
 	UserPreference,
@@ -38,13 +31,6 @@ export const bookkeeperApi = createApi({
 		deleteUser: builder.mutation({
 			query: () => 'me/account',
 		}),
-		createUser: builder.mutation({
-			query: (request: CreateUserRequest) => ({
-				url: 'users/new',
-				body: request,
-				method: 'POST',
-			}),
-		}),
 		updateUserPreference: builder.mutation({
 			query: (request: UserPreference) => ({
 				url: 'me/preference',
@@ -73,30 +59,14 @@ export const bookkeeperApi = createApi({
 				method: 'POST',
 			}),
 		}),
-		// AUTH
-		getAccessToken: builder.mutation({
-			query: (request: LoginRequestType) => ({
-				url: 'oauth2/token',
-				body: request,
-				method: 'POST',
-			}),
-			transformResponse: (response: LoginResponseType) => {
-				Cookies.set('token', response.accessToken, {
-					expires: 14,
-					secure: true,
-				});
-			},
-		}),
 	}),
 });
 
 export const {
 	useGetUserQuery,
 	useDeleteUserMutation,
-	useCreateUserMutation,
 	useUpdateUserPreferenceMutation,
 	useRequestAccountActivationOtpMutation,
 	useRequestResetPasswordOtpMutation,
 	useResetPasswordMutation,
-	useGetAccessTokenMutation,
 } = bookkeeperApi;

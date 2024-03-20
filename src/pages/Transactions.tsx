@@ -172,7 +172,7 @@ const tempData: Transaction[] = [
 
 export default function Transactions() {
 	return (
-		<div className="mx-auto mb-8 w-11/12 sm:mb-16 md:w-3/4 xl:w-2/5">
+		<div className="mx-auto my-8 w-11/12 sm:my-16 md:w-3/4 lg:my-8 xl:w-2/5">
 			<DataTable
 				columns={columns}
 				data={tempData.sort((t1, t2) => {

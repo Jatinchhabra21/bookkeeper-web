@@ -8,14 +8,13 @@ import {
 } from '../../../components/ui/dialog';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import constants from '../../constants/OtpDialogContent.constants';
-import { toggleIsSignUpDialogVisible } from '../../store/slices/globalSlice';
 import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
 import { OTPInput, SlotProps } from 'input-otp';
 import { cn } from '../../../lib/utils';
-import { useCreateUserMutation } from '../../store/slices/apiSlice';
 import { CreateUserRequest } from '../../store/apiSlice.types';
 import { useToast } from '../../../components/ui/use-toast';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { useAuth } from '../../hooks/useAuth';
 
 type OtpFieldStateType = {
 	value: string;
@@ -31,7 +30,7 @@ export default function OtpDialogContent({
 	nextDialogStage,
 }: OtpDialogContentProps) {
 	const dispatch = useAppDispatch();
-	const [createUser, { isLoading }] = useCreateUserMutation();
+	const { signUp, isLoading } = useAuth();
 	const { toast } = useToast();
 
 	const [otpField, setOtpField] = useState<OtpFieldStateType>(
@@ -46,7 +45,7 @@ export default function OtpDialogContent({
 				return { ...prev, error: constants.OTP_REQUIRED };
 			});
 
-		createUser({
+		signUp({
 			displayName: signUpDetails.name,
 			email: signUpDetails.email,
 			password: signUpDetails.password,
@@ -56,17 +55,7 @@ export default function OtpDialogContent({
 				defaultCurrency: 'INR',
 				defaultTheme: 'Default',
 			},
-		} as unknown as CreateUserRequest)
-			.unwrap()
-			.catch((error) => {
-				toast({
-					title: 'Uh oh! Something went wrong.',
-					description: error.data.errorMessage,
-				});
-			})
-			.finally(() => {
-				dispatch(toggleIsSignUpDialogVisible());
-			});
+		} as unknown as CreateUserRequest);
 	};
 
 	function Slot(props: SlotProps) {

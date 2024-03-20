@@ -2,7 +2,7 @@ import { Dialog, DialogContent } from '../../../components/ui/dialog';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { LogInDialogStage } from '../../constants/LogInDialog.constants';
-import { toggleIsLogInDialogVisible } from '../../store/slices/globalSlice';
+import { setIsLogInVisible } from '../../store/slices/globalSlice'; // TODO: Fix sign in reducer action
 import UserCredentialDialogContent from '../UserCredentialDialogContent/UserCredentialDialogContent';
 
 export type LogInDialogProps = {
@@ -28,7 +28,7 @@ export default function LogInDialog({
 	}
 
 	function componentWillUnmount() {
-		dispatch(toggleIsLogInDialogVisible());
+		dispatch(setIsLogInVisible(false));
 	}
 
 	return (

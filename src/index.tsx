@@ -5,6 +5,7 @@ import './index.css';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { BrowserRouter } from 'react-router-dom';
+import './web.config';
 
 // eslint-disable-next-line no-undef
 const root = createRoot(document.getElementById('root') as Element);

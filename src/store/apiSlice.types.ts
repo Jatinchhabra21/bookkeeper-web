@@ -2,7 +2,7 @@ export type CreateUserRequest = {
 	displayName: string;
 	email: string;
 	password: string;
-	otp: number;
+	otp: string;
 	userPreference: UserPreference;
 };
 
