@@ -57,10 +57,6 @@ body {
 	min-width: 0;
 }
 
-a {
-	all: unset;
-}
-
 .btn {
 	padding: 0.5rem 0.75rem;
 	border-radius: 8px;

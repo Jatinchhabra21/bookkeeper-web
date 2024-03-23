@@ -1,18 +1,16 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
 import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from '../../../components/ui/dialog';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { useAppSelector } from '../../store/hooks';
 import constants from '../../constants/OtpDialogContent.constants';
-import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
+import { SignUpStage } from '../../constants/SignUp.constants';
 import { OTPInput, SlotProps } from 'input-otp';
 import { cn } from '../../../lib/utils';
 import { CreateUserRequest } from '../../store/apiSlice.types';
-import { useToast } from '../../../components/ui/use-toast';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -22,16 +20,14 @@ type OtpFieldStateType = {
 
 export type OtpDialogContentProps = {
 	updateCurrentDialogStage?: (email: React.SetStateAction<any>) => void;
-	nextDialogStage?: SignUpDialogStage;
+	nextDialogStage?: SignUpStage;
 };
 
 export default function OtpDialogContent({
 	updateCurrentDialogStage,
 	nextDialogStage,
 }: OtpDialogContentProps) {
-	const dispatch = useAppDispatch();
 	const { signUp, isLoading } = useAuth();
-	const { toast } = useToast();
 
 	const [otpField, setOtpField] = useState<OtpFieldStateType>(
 		{} as OtpFieldStateType
@@ -87,12 +83,7 @@ export default function OtpDialogContent({
 
 	return (
 		<>
-			<DialogHeader>
-				<DialogTitle>
-					{constants.DIALOG_TITLE} {signUpDetails.email}
-				</DialogTitle>
-			</DialogHeader>
-			<div className="my-2 flex flex-col gap-1">
+			<div className="my-2 mb-8 flex flex-col gap-1">
 				<div className="flex w-full items-center justify-center space-x-2">
 					<OTPInput
 						maxLength={6}
@@ -112,15 +103,14 @@ export default function OtpDialogContent({
 					/>
 				</div>
 			</div>
-			<DialogFooter>
-				<Button
-					disabled={!otpField.value || isLoading}
-					onClick={handleOtpStageChange}
-				>
-					{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-					{isLoading ? 'Please wait' : constants.CTA_TEXT}
-				</Button>
-			</DialogFooter>
+			<Button
+				disabled={!otpField.value || isLoading}
+				onClick={handleOtpStageChange}
+				className={'w-full text-xs sm:text-sm'}
+			>
+				{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+				{isLoading ? 'Please wait' : constants.CTA_TEXT}
+			</Button>
 		</>
 	);
 }

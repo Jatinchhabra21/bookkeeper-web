@@ -1,46 +1,26 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Header, FullPageSpinner } from './components';
+import { Routes, Route } from 'react-router-dom';
+import Header from './components/Header/Header';
+import FullPageSpinner from './components/FullPageSpinner/FullPageSpinner';
 import { Size } from './components/Spinner/Spinner.types';
-import { useAppSelector } from './store/hooks';
 import HomePage from './pages/HomePage';
-import SignUpDialog from './components/SignUpDialog/SignUpDialog';
-import { SignUpDialogStage } from './constants/SignUpDialog.constants';
 import { Toaster } from '../components/ui/toaster';
-import LogInDialog from './components/LogInDialog/LogInDialog';
-import { LogInDialogStage } from './constants/LogInDialog.constants';
 import Transactions from './pages/Transactions';
-import { AuthProvider, useAuth } from './hooks/useAuth';
+import { AuthProvider } from './hooks/useAuth';
+import Authentication from './pages/Authentication';
 
 export default function App() {
-	const { isSignUpDialogVisible, isLogInDialogVisible } = useAppSelector(
-		(state) => state.global
-	);
-
 	return (
 		<Suspense fallback={<FullPageSpinner size={Size.normal} />}>
 			<AuthProvider>
 				<Toaster />
-				{isSignUpDialogVisible && (
-					<SignUpDialog
-						initialDialogStage={SignUpDialogStage.USER_DETAIL}
-						isVisible={isSignUpDialogVisible}
-					/>
-				)}
-				{isLogInDialogVisible && (
-					<LogInDialog
-						initialDialogStage={LogInDialogStage.USER_CREDENTIAL}
-						isVisible={isLogInDialogVisible}
-					/>
-				)}
 				<div className="relative flex h-screen flex-col overflow-x-hidden">
 					<Header />
-					<div>
-						<Routes>
-							<Route path="/" element={<HomePage />} />
-							<Route path="/transactions" element={<Transactions />} />
-						</Routes>
-					</div>
+					<Routes>
+						<Route path="/" element={<HomePage />} />
+						<Route path="/transactions" element={<Transactions />} />
+						<Route path="/user/:action" element={<Authentication />} />
+					</Routes>
 				</div>
 			</AuthProvider>
 		</Suspense>

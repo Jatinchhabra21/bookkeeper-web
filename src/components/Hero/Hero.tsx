@@ -3,16 +3,12 @@ import constants from '../../constants/Hero.constants';
 import { Button } from '../../../components/ui/button';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useAppDispatch } from '../../store/hooks';
-import {
-	setIsLogInVisible,
-	setIsSignUpVisible,
-} from '../../store/slices/globalSlice';
 import headerConstants from '../../constants/Header.constants';
+import { useNavigate } from 'react-router-dom';
 
 export default function Hero() {
 	const timeline = useRef<gsap.core.Timeline | null>(null);
-	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 
 	useGSAP(() => {
 		timeline.current = gsap
@@ -42,7 +38,7 @@ export default function Hero() {
 			<h1 className="mb-4 text-2xl font-thin text-slate-400 md:text-3xl xl:text-4xl">
 				{headerConstants.BOOKKEEPER}
 			</h1>
-			<div className="blob relative -z-10">
+			<div className="relative -z-10">
 				<div className="blob-1 absolute -left-4 -top-2 -z-20 h-5/6 w-9/12 rounded-full bg-purple-500 opacity-35 mix-blend-multiply blur-2xl filter"></div>
 				<div className="blob-2 absolute right-4 top-8 -z-20 h-5/6 w-9/12 rounded-full bg-emerald-500 opacity-35 mix-blend-multiply blur-2xl filter"></div>
 				<div className="blob-3 absolute -bottom-8 left-0 -z-20 h-5/6 w-9/12 rounded-full bg-yellow-500 opacity-35 mix-blend-multiply blur-2xl filter"></div>
@@ -51,16 +47,10 @@ export default function Hero() {
 				</p>
 			</div>
 			<div className="flex gap-8">
-				<Button
-					variant="default"
-					onClick={() => dispatch(setIsSignUpVisible(true))}
-				>
+				<Button variant="default" onClick={() => navigate('/user/signup')}>
 					{constants.SIGNUP_CTA_TEXT}
 				</Button>
-				<Button
-					variant="outline"
-					onClick={() => dispatch(setIsLogInVisible(true))}
-				>
+				<Button variant="outline" onClick={() => navigate('/user/login')}>
 					{constants.LOGIN_CTA_TEXT}
 				</Button>
 			</div>

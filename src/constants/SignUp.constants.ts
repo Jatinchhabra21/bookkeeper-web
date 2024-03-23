@@ -1,3 +1,8 @@
+export enum SignUpStage {
+	USER_DETAIL,
+	OTP,
+}
+
 export default Object.freeze({
 	EMAIL_REQUIRED: 'Email address is required',
 	EMAIL_INVALID: 'Invalid email',

@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { SignUpDialogStage } from '../../constants/SignUpDialog.constants';
-import constants from '../../constants/UserDetailDialogContent.constants';
+import { SignUpStage } from '../../constants/SignUp.constants';
+import constants from '../../constants/SignUp.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
 	SignUpDetailsType,
@@ -31,13 +31,13 @@ type UserDetailStateType = {
 };
 
 export type UserDetailDialogContentProps = {
-	updateCurrentDialogStage: (value: React.SetStateAction<any>) => void;
-	nextDialogStage: SignUpDialogStage;
+	updateStage: (value: React.SetStateAction<any>) => void;
+	nextStage: SignUpStage;
 };
 
 export default function UserDetailDialogContent({
-	updateCurrentDialogStage,
-	nextDialogStage,
+	updateStage,
+	nextStage,
 }: UserDetailDialogContentProps) {
 	// redux state
 	const userEmail = useAppSelector((state) => state.auth.signUpDetails.email);
@@ -218,7 +218,7 @@ export default function UserDetailDialogContent({
 			requestOtp({ email: userDetail.email } as OtpRequest)
 				.unwrap()
 				.then(() => {
-					updateCurrentDialogStage(nextDialogStage);
+					updateStage(nextStage);
 				})
 				.catch((error) => {
 					toast({
@@ -231,11 +231,8 @@ export default function UserDetailDialogContent({
 
 	return (
 		<>
-			<DialogHeader>
-				<DialogTitle>{constants.DIALOG_TITLE}</DialogTitle>
-			</DialogHeader>
-			<div className="flex flex-col gap-4">
-				<div className="flex flex-col gap-1">
+			<div className="mb-8 flex flex-col gap-4">
+				<div className="flex flex-col gap-2">
 					<Input
 						type="text"
 						placeholder={constants.NAME_INPUT_PLACEHOLDER}
@@ -256,7 +253,7 @@ export default function UserDetailDialogContent({
 						</p>
 					)}
 				</div>
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col gap-2">
 					<Input
 						type="email"
 						placeholder={constants.EMAIL_INPUT_PLACEHOLDER}
@@ -277,9 +274,7 @@ export default function UserDetailDialogContent({
 						</p>
 					)}
 				</div>
-			</div>
-			<div className="flex flex-col gap-4">
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col gap-2">
 					<PasswordInput
 						placeholder={constants.PASSWORD_INPUT_PLACEHOLDER}
 						value={userDetail.password}
@@ -299,7 +294,7 @@ export default function UserDetailDialogContent({
 						</p>
 					)}
 				</div>
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col gap-2">
 					<PasswordInput
 						placeholder={constants.REPEAT_PASSWORD_INPUT_PLACEHOLDER}
 						value={userDetail.repeatPassword}
@@ -323,33 +318,23 @@ export default function UserDetailDialogContent({
 					)}
 				</div>
 			</div>
-			<DialogFooter>
-				<div className="items-cente flex w-full items-center justify-between text-sm">
-					<span className="font-medium text-gray-light">
-						Already have an account?{' '}
-						<span className="cursor-pointer font-normal text-white underline underline-offset-2">
-							Sign in
-						</span>
-					</span>
-					<Button
-						disabled={
-							!!(
-								userDetail.emailError ||
-								userDetail.nameError ||
-								userDetail.passwordError ||
-								userDetail.repeatPasswordError
-							) || isRequestOtpLoading
-						}
-						onClick={handleEmailStageChange}
-						className={'text-xs sm:text-sm'}
-					>
-						{isRequestOtpLoading && (
-							<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-						)}
-						{isRequestOtpLoading ? 'Please wait' : constants.CTA_TEXT}
-					</Button>
-				</div>
-			</DialogFooter>
+			<Button
+				disabled={
+					!!(
+						userDetail.emailError ||
+						userDetail.nameError ||
+						userDetail.passwordError ||
+						userDetail.repeatPasswordError
+					) || isRequestOtpLoading
+				}
+				onClick={handleEmailStageChange}
+				className={'w-full text-xs sm:text-sm'}
+			>
+				{isRequestOtpLoading && (
+					<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+				)}
+				{isRequestOtpLoading ? 'Please wait' : constants.CTA_TEXT}
+			</Button>
 		</>
 	);
 }

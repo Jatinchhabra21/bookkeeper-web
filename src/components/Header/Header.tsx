@@ -6,16 +6,12 @@ import Navlink from '../Navlink/Navlink';
 import { Button } from '../../../components/ui/button';
 import heroConstants from '../../constants/Hero.constants';
 import headerConstants from '../../constants/Header.constants';
-import { useAppDispatch } from '../../store/hooks';
-import {
-	setIsSignUpVisible,
-	setIsLogInVisible,
-} from '../../store/slices/globalSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
 	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
 	const { contextSafe } = useGSAP();
-	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 
 	const handleHamburgerClick = contextSafe(() => {
 		if (!isNavExpanded) {
@@ -40,8 +36,8 @@ export default function Header() {
 	});
 
 	return (
-		<header className="sticky top-0 z-10 w-screen border-b border-border/10 border-b-slate-800 bg-[#020817]/60 text-white">
-			<div className="flex items-center justify-between bg-[#020817]/60 px-8 py-4 backdrop-blur supports-[backdrop-filter]:bg-[#020817]/60">
+		<header className="sticky top-0 z-10 w-screen border-b border-border/10 border-b-slate-900 bg-[#010610]/60 text-white">
+			<div className="flex items-center justify-between bg-[#010610]/10 px-8 py-4 backdrop-blur supports-[backdrop-filter]:bg-[#010610]/10">
 				<div className="w-max cursor-pointer text-xl font-medium">
 					<a href="/">{headerConstants.BOOKKEEPER}</a>
 				</div>
@@ -53,7 +49,7 @@ export default function Header() {
 					</div>
 				</div>
 				<div
-					className={`navbar absolute right-0 top-0 z-[1000] flex h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between bg-[#020817]/95 px-8 font-light text-white sm:gap-6 md:gap-10 ${!isNavExpanded && 'hidden'} sm:static sm:flex sm:h-fit sm:w-full sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0`}
+					className={`navbar absolute right-0 top-0 z-[1000] h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between bg-[#010610]/95 px-8 font-light text-white sm:gap-6 md:gap-10 ${isNavExpanded ? 'flex' : 'hidden'} sm:static sm:flex sm:h-fit sm:w-full sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0`}
 				>
 					<nav className="flex flex-col gap-6 sm:flex-row sm:gap-4 md:gap-6">
 						<Navlink
@@ -65,16 +61,10 @@ export default function Header() {
 						<Navlink text={headerConstants.NAV_LINK_BILLS} />
 					</nav>
 					<div className="flex flex-col justify-between gap-4 sm:flex-row">
-						<Button
-							variant="default"
-							onClick={() => dispatch(setIsSignUpVisible(true))}
-						>
+						<Button variant="default" onClick={() => navigate('/user/signup')}>
 							{heroConstants.SIGNUP_CTA_TEXT}
 						</Button>
-						<Button
-							variant="secondary"
-							onClick={() => dispatch(setIsLogInVisible(true))}
-						>
+						<Button variant="secondary" onClick={() => navigate('/user/login')}>
 							{heroConstants.LOGIN_CTA_TEXT}
 						</Button>
 					</div>

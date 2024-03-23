@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import globalReducer from './slices/globalSlice';
 import authReducer from './slices/authSlice';
 import { bookkeeperApi } from './slices/apiSlice';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 export const store = configureStore({
 	reducer: {
-		global: globalReducer,
 		auth: authReducer,
 		[bookkeeperApi.reducerPath]: bookkeeperApi.reducer,
 	},
