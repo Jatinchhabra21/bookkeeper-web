@@ -6,12 +6,10 @@ import Navlink from '../Navlink/Navlink';
 import { Button } from '../../../components/ui/button';
 import heroConstants from '../../constants/Hero.constants';
 import headerConstants from '../../constants/Header.constants';
-import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
 	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
 	const { contextSafe } = useGSAP();
-	const navigate = useNavigate();
 
 	const handleHamburgerClick = contextSafe(() => {
 		if (!isNavExpanded) {
@@ -61,12 +59,18 @@ export default function Header() {
 						<Navlink text={headerConstants.NAV_LINK_BILLS} />
 					</nav>
 					<div className="flex flex-col justify-between gap-4 sm:flex-row">
-						<Button variant="default" onClick={() => navigate('/user/signup')}>
-							{heroConstants.SIGNUP_CTA_TEXT}
-						</Button>
-						<Button variant="secondary" onClick={() => navigate('/user/login')}>
-							{heroConstants.LOGIN_CTA_TEXT}
-						</Button>
+						<Button
+							variant="default"
+							role="link"
+							to="/user/signup"
+							ctaText={heroConstants.SIGNUP_CTA_TEXT}
+						/>
+						<Button
+							variant="secondary"
+							role="link"
+							to="/user/login"
+							ctaText={heroConstants.LOGIN_CTA_TEXT}
+						/>
 					</div>
 				</div>
 			</div>

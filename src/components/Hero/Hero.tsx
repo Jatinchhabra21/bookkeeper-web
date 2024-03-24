@@ -4,11 +4,9 @@ import { Button } from '../../../components/ui/button';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import headerConstants from '../../constants/Header.constants';
-import { useNavigate } from 'react-router-dom';
 
 export default function Hero() {
 	const timeline = useRef<gsap.core.Timeline | null>(null);
-	const navigate = useNavigate();
 
 	useGSAP(() => {
 		timeline.current = gsap
@@ -47,12 +45,18 @@ export default function Hero() {
 				</p>
 			</div>
 			<div className="flex gap-8">
-				<Button variant="default" onClick={() => navigate('/user/signup')}>
-					{constants.SIGNUP_CTA_TEXT}
-				</Button>
-				<Button variant="outline" onClick={() => navigate('/user/login')}>
-					{constants.LOGIN_CTA_TEXT}
-				</Button>
+				<Button
+					variant="default"
+					to="/user/signup"
+					ctaText={constants.SIGNUP_CTA_TEXT}
+					role="link"
+				/>
+				<Button
+					variant="secondary"
+					to="/user/login"
+					ctaText={constants.SIGNUP_CTA_TEXT}
+					role="link"
+				/>
 			</div>
 		</div>
 	);

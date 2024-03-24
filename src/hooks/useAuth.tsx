@@ -89,8 +89,8 @@ export function AuthProvider({ children }: any) {
 			.catch((error) => {
 				toast({
 					title: error.errorMessage
-						? '🙁 Uh oh! ' + error.errorMessage
-						: '🙁 Uh oh! Something went wrong.',
+						? '🙁 Oops! ' + error.errorMessage
+						: '🙁 Oops! Something went wrong.',
 					variant: 'error',
 				});
 			})
