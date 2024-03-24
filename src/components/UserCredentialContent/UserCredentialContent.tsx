@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useState } from 'react';
-import { LogInDialogStage } from '../../constants/LogInDialog.constants';
 import { Input } from '../../../components/ui/input';
 import constants from '../../constants/UserCredentialDialogContent.constants';
 import PasswordInput from '../PasswordInput/PasswordInput';
@@ -10,15 +9,7 @@ import {
 } from '../../../components/ui/dialog';
 import { Button } from '../../../components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { LoginRequestType } from '../../store/apiSlice.types';
-import { useToast } from '../../../components/ui/use-toast';
-import { useAppDispatch } from '../../store/hooks';
 import { useAuth } from '../../hooks/useAuth';
-
-export type UserCredentialDialogContentPropType = {
-	updateCurrentDialogStage: (value: React.SetStateAction<any>) => void;
-	nextDialogStage: LogInDialogStage;
-};
 
 export type UserCredentialtateType = {
 	email: string;
@@ -27,14 +18,10 @@ export type UserCredentialtateType = {
 	passwordError?: string;
 };
 
-export default function UserCredentialDialogContent() {
+export default function UserCredentialContent() {
 	const [userCredential, setUserCredential] = useState<UserCredentialtateType>(
 		{} as UserCredentialtateType
 	);
-
-	const dispatch = useAppDispatch();
-
-	const { toast } = useToast();
 
 	const { logIn, isLoading } = useAuth();
 
@@ -80,10 +67,7 @@ export default function UserCredentialDialogContent() {
 
 	return (
 		<>
-			<DialogHeader>
-				<DialogTitle>{constants.DIALOG_TITLE}</DialogTitle>
-			</DialogHeader>
-			<div className="flex flex-col gap-4">
+			<div className="mb-8 flex flex-col gap-4">
 				<div className="flex flex-col gap-1">
 					<Input
 						type="email"
@@ -116,17 +100,20 @@ export default function UserCredentialDialogContent() {
 					required
 					aria-required
 				/>
+				<div className="flex justify-end">
+					<span className="cursor-pointer border-b-2 border-transparent text-sm text-slate-400 hover:border-slate-600">
+						Forgot password?
+					</span>
+				</div>
 			</div>
-			<DialogFooter>
-				<Button
-					disabled={!!userCredential.emailError || isLoading}
-					className={'text-xs sm:text-sm'}
-					onClick={handleLogin}
-				>
-					{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-					{isLoading ? 'Please wait' : constants.CTA_TEXT}
-				</Button>
-			</DialogFooter>
+			<Button
+				disabled={!!userCredential.emailError || isLoading}
+				className={'w-full text-xs sm:text-sm'}
+				onClick={handleLogin}
+			>
+				{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+				{isLoading ? 'Please wait' : constants.CTA_TEXT}
+			</Button>
 		</>
 	);
 }

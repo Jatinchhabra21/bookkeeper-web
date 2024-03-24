@@ -3,14 +3,10 @@ import {
 	LoginRequestType,
 	LoginResponseType,
 } from '../store/apiSlice.types';
-import { Context, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
-import { useAppDispatch } from '../store/hooks';
-import {
-	setIsLogInVisible,
-	setIsSignUpVisible,
-} from '../store/slices/globalSlice';
 import { createContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const authContext = createContext<any>(null);
 
@@ -32,10 +28,9 @@ export type AuthenticatedUserType = {
 export function AuthProvider({ children }: any) {
 	const [authenticatedUser, setAuthenticatedUser] =
 		useState<AuthenticatedUserType | null>(null);
-
-	const dispatch = useAppDispatch();
-
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+
+	const navigate = useNavigate();
 
 	const { toast } = useToast();
 
@@ -64,13 +59,14 @@ export function AuthProvider({ children }: any) {
 			})
 			.catch((error) => {
 				toast({
-					title: 'Uh oh! Something went wrong.',
-					description: error.errorMessage,
+					title: error.errorMessage
+						? 'Uh oh! :( ' + error.errorMessage
+						: 'Uh oh! Something went wrong.',
 				});
 			})
 			.finally(() => {
 				setIsLoading(false);
-				dispatch(setIsLogInVisible(false));
+				navigate('/');
 			});
 	};
 
@@ -92,13 +88,15 @@ export function AuthProvider({ children }: any) {
 			})
 			.catch((error) => {
 				toast({
-					title: 'Uh oh! Something went wrong.',
-					description: error.errorMessage,
+					title: error.errorMessage
+						? '🙁 Oops! ' + error.errorMessage
+						: '🙁 Oops! Something went wrong.',
+					variant: 'error',
 				});
 			})
 			.finally(() => {
 				setIsLoading(false);
-				dispatch(setIsSignUpVisible(false));
+				navigate('/');
 			});
 	};
 
