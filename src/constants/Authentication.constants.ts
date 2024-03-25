@@ -1,6 +1,9 @@
-export enum SignUpStage {
+export enum AuthenticationStage {
 	USER_DETAIL,
+	USER_CREDENTIAL,
 	OTP,
+	EMAIL_INPUT,
+	UPDATE_PASSWORD,
 }
 
 export default Object.freeze({
@@ -10,7 +13,7 @@ export default Object.freeze({
 	DIALOG_TITLE: 'Sign up',
 	NAME_INPUT_PLACEHOLDER: 'Full name',
 	EMAIL_INPUT_PLACEHOLDER: 'Email',
-	CTA_TEXT: 'Request OTP',
+	USER_DETAIL_CTA_TEXT: 'Request OTP',
 	PASSWORD_REQUIRED: 'Password is required',
 	REPEAT_PASSWORD_REQUIRED: 'Please confirm your password',
 	PASSWORD_NO_MATCH: 'Password does not match',

@@ -1,23 +1,19 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
-import { SignUpStage } from '../../constants/SignUp.constants';
-import constants from '../../constants/SignUp.constants';
+import { AuthenticationStage } from '../../constants/Authentication.constants';
+import constants from '../../constants/Authentication.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
-	SignUpDetailsType,
-	setSignUpDetails,
-} from '../../store/slices/authSlice';
-import {
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from '../../../components/ui/dialog';
+	UnauthenticatedUserState,
+	setUserDetails,
+} from '../../store/slices/unauthenticatedUserSlice';
 import { useRequestAccountActivationOtpMutation } from '../../store/slices/apiSlice';
 import { OtpRequest } from '../../store/apiSlice.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import PasswordInput from '../PasswordInput/PasswordInput';
 import { useToast } from '../../../components/ui/use-toast';
+import { RootState } from '../../store/store';
 
 type UserDetailStateType = {
 	email: string;
@@ -31,8 +27,8 @@ type UserDetailStateType = {
 };
 
 export type UserDetailDialogContentProps = {
-	updateStage: (value: React.SetStateAction<any>) => void;
-	nextStage: SignUpStage;
+	updateStage: (value: React.SetStateAction<AuthenticationStage>) => void;
+	nextStage: AuthenticationStage;
 };
 
 export default function UserDetailDialogContent({
@@ -40,7 +36,9 @@ export default function UserDetailDialogContent({
 	nextStage,
 }: UserDetailDialogContentProps) {
 	// redux state
-	const userEmail = useAppSelector((state) => state.auth.signUpDetails.email);
+	const userEmail = useAppSelector(
+		(state: RootState) => state.unauthenticatedUser.email
+	);
 	const { toast } = useToast(); // shadcn ui hook
 
 	const [
@@ -209,11 +207,11 @@ export default function UserDetailDialogContent({
 
 		if (!isError) {
 			dispatch(
-				setSignUpDetails({
+				setUserDetails({
 					name: userDetail.name,
 					email: userDetail.email,
 					password: userDetail.password,
-				} as SignUpDetailsType)
+				} as UnauthenticatedUserState)
 			);
 			requestOtp({ email: userDetail.email } as OtpRequest)
 				.unwrap()
@@ -333,7 +331,7 @@ export default function UserDetailDialogContent({
 				{isRequestOtpLoading && (
 					<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
 				)}
-				{isRequestOtpLoading ? 'Please wait' : constants.CTA_TEXT}
+				{isRequestOtpLoading ? 'Please wait' : constants.USER_DETAIL_CTA_TEXT}
 			</Button>
 		</>
 	);
