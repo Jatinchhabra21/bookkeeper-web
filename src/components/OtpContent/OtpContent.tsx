@@ -1,31 +1,27 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '../../../components/ui/button';
-import {
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from '../../../components/ui/dialog';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import constants from '../../constants/OtpDialogContent.constants';
-import { SignUpStage } from '../../constants/SignUp.constants';
+import { AuthenticationStage } from '../../constants/Authentication.constants';
 import { OTPInput, SlotProps } from 'input-otp';
 import { cn } from '../../../lib/utils';
 import { CreateUserRequest } from '../../store/apiSlice.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { useAuth } from '../../hooks/useAuth';
+import { setOtp } from '../../store/slices/unauthenticatedUserSlice';
 
 type OtpFieldStateType = {
 	value: string;
 };
 
 export type OtpDialogContentProps = {
-	updateCurrentDialogStage?: (email: React.SetStateAction<any>) => void;
-	nextDialogStage?: SignUpStage;
+	updateStage?: (value: React.SetStateAction<AuthenticationStage>) => void;
+	nextStage?: AuthenticationStage;
 };
 
 export default function OtpDialogContent({
-	updateCurrentDialogStage,
-	nextDialogStage,
+	updateStage,
+	nextStage,
 }: OtpDialogContentProps) {
 	const { signUp, isLoading } = useAuth();
 
@@ -33,25 +29,35 @@ export default function OtpDialogContent({
 		{} as OtpFieldStateType
 	);
 
-	const signUpDetails = useAppSelector((state) => state.auth.signUpDetails);
+	const { email, name, password } = useAppSelector(
+		(state) => state.unauthenticatedUser
+	);
+
+	const dispatch = useAppDispatch();
 
 	const handleOtpStageChange = () => {
 		if (!otpField.value)
 			setOtpField((prev) => {
 				return { ...prev, error: constants.OTP_REQUIRED };
 			});
-
-		signUp({
-			displayName: signUpDetails.name,
-			email: signUpDetails.email,
-			password: signUpDetails.password,
-			otp: otpField.value,
-			userPreference: {
-				dailyReminder: false,
-				defaultCurrency: 'INR',
-				defaultTheme: 'Default',
-			},
-		} as unknown as CreateUserRequest);
+		else {
+			if (nextStage) {
+				dispatch(setOtp(otpField.value));
+				updateStage && updateStage(nextStage);
+			} else {
+				signUp({
+					displayName: name,
+					email: email,
+					password: password,
+					otp: otpField.value,
+					userPreference: {
+						dailyReminder: false,
+						defaultCurrency: 'INR',
+						defaultTheme: 'Default',
+					},
+				} as unknown as CreateUserRequest);
+			}
+		}
 	};
 
 	function Slot(props: SlotProps) {

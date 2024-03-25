@@ -2,7 +2,7 @@ import { Input } from '../../../components/ui/input';
 import React, { ChangeEvent, useState } from 'react';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 
-export type PasswordInputPropsType = {
+export type PasswordInputPropType = {
 	value: string;
 	error?: string;
 	placeholder?: string;
@@ -18,7 +18,7 @@ export default function PasswordInput({
 	onChange,
 	onBlur,
 	required,
-}: PasswordInputPropsType) {
+}: PasswordInputPropType) {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
 	return (
@@ -29,7 +29,7 @@ export default function PasswordInput({
 				value={value}
 				onChange={onChange}
 				onBlur={onBlur}
-				className={`${error ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1 tracking-wide`}
+				className={`${error ? 'outline outline-1 outline-offset-2 outline-red-600' : ''} flex-1`}
 				required={required}
 				aria-required={required}
 			/>

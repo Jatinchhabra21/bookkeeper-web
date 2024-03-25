@@ -4,6 +4,7 @@ import { Button } from '../../../components/ui/button';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import headerConstants from '../../constants/Header.constants';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
 	const timeline = useRef<gsap.core.Timeline | null>(null);
@@ -32,7 +33,7 @@ export default function Hero() {
 	});
 
 	return (
-		<div className=" background-img mx-auto my-16 text-slate-100 sm:my-16 sm:w-4/5 md:my-12">
+		<div className="background-img mx-auto my-16 text-slate-100 sm:my-16 sm:w-4/5 md:my-12">
 			<h1 className="mb-4 text-2xl font-thin text-slate-400 md:text-3xl xl:text-4xl">
 				{headerConstants.BOOKKEEPER}
 			</h1>
@@ -45,18 +46,12 @@ export default function Hero() {
 				</p>
 			</div>
 			<div className="flex gap-8">
-				<Button
-					variant="default"
-					to="/user/signup"
-					ctaText={constants.SIGNUP_CTA_TEXT}
-					role="link"
-				/>
-				<Button
-					variant="secondary"
-					to="/user/login"
-					ctaText={constants.SIGNUP_CTA_TEXT}
-					role="link"
-				/>
+				<Button asChild variant={'default'}>
+					<Link to="/user/signup">{constants.SIGNUP_CTA_TEXT}</Link>
+				</Button>
+				<Button asChild variant={'secondary'}>
+					<Link to="/user/login">{constants.LOGIN_CTA_TEXT}</Link>
+				</Button>
 			</div>
 		</div>
 	);

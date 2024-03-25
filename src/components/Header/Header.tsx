@@ -6,6 +6,7 @@ import Navlink from '../Navlink/Navlink';
 import { Button } from '../../../components/ui/button';
 import heroConstants from '../../constants/Hero.constants';
 import headerConstants from '../../constants/Header.constants';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
 	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
@@ -59,18 +60,12 @@ export default function Header() {
 						<Navlink text={headerConstants.NAV_LINK_BILLS} />
 					</nav>
 					<div className="flex flex-col justify-between gap-4 sm:flex-row">
-						<Button
-							variant="default"
-							role="link"
-							to="/user/signup"
-							ctaText={heroConstants.SIGNUP_CTA_TEXT}
-						/>
-						<Button
-							variant="secondary"
-							role="link"
-							to="/user/login"
-							ctaText={heroConstants.LOGIN_CTA_TEXT}
-						/>
+						<Button asChild variant={'default'}>
+							<Link to="/user/signup">{heroConstants.SIGNUP_CTA_TEXT}</Link>
+						</Button>
+						<Button asChild variant={'secondary'}>
+							<Link to="/user/login">{heroConstants.LOGIN_CTA_TEXT}</Link>
+						</Button>
 					</div>
 				</div>
 			</div>

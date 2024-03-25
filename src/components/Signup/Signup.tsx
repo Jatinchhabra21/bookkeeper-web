@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	Card,
 	CardHeader,
@@ -7,48 +7,50 @@ import {
 	CardDescription,
 } from '../../../components/ui/card';
 import UserDetailContent from '../UserDetailContent/UserDetailContent';
-import { SignUpStage } from '../../constants/SignUp.constants';
+import { AuthenticationStage } from '../../constants/Authentication.constants';
 import OtpContent from '../OtpContent/OtpContent';
 import { Link } from 'react-router-dom';
 
 export default function Signup() {
-	const [stage, setStage] = useState<SignUpStage>(SignUpStage.USER_DETAIL);
+	const [stage, setStage] = useState<AuthenticationStage>(
+		AuthenticationStage.USER_DETAIL
+	);
 
 	function getCardContent() {
 		switch (stage) {
-			case SignUpStage.USER_DETAIL:
+			case AuthenticationStage.USER_DETAIL:
 				return (
 					<UserDetailContent
-						nextStage={SignUpStage.OTP}
+						nextStage={AuthenticationStage.OTP}
 						updateStage={setStage}
 					/>
 				);
-			case SignUpStage.OTP:
+			case AuthenticationStage.OTP:
 				return <OtpContent />;
 		}
 	}
 
 	function getCardTitle(): string | undefined {
 		switch (stage) {
-			case SignUpStage.USER_DETAIL:
+			case AuthenticationStage.USER_DETAIL:
 				return 'Sign up';
-			case SignUpStage.OTP:
+			case AuthenticationStage.OTP:
 				return 'Verify your identity';
 		}
 	}
 
 	function getCardDescription(): string | undefined {
 		switch (stage) {
-			case SignUpStage.USER_DETAIL:
+			case AuthenticationStage.USER_DETAIL:
 				return "Let's create your account";
-			case SignUpStage.OTP:
+			case AuthenticationStage.OTP:
 				return 'Enter OTP and Confirm';
 		}
 	}
 
 	return (
 		<div className="flex flex-col items-center gap-6">
-			<Card className="w-[350px] shadow-lg shadow-slate-100/10">
+			<Card className="w-[350px] shadow-lg shadow-slate-100/10 sm:w-[500px]">
 				<CardHeader>
 					<CardTitle>{getCardTitle()}</CardTitle>
 					<CardDescription>{getCardDescription()}</CardDescription>

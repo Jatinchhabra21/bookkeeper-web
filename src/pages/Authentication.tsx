@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import Signup from '../components/Signup/Signup';
 import LogIn from '../components/LogIn/LogIn';
 import { useParams } from 'react-router';
+import ResetPassword from '../components/ResetPassword/ResetPassword';
 
 export enum USER_ACTION {
 	LOGIN = 'login',
 	SIGNUP = 'signup',
+	RESET_PASSWORD = 'reset-password',
 }
 
 export default function Authentication() {
@@ -17,6 +19,8 @@ export default function Authentication() {
 				return <LogIn />;
 			case USER_ACTION.SIGNUP:
 				return <Signup />;
+			case USER_ACTION.RESET_PASSWORD:
+				return <ResetPassword />;
 		}
 	}
 

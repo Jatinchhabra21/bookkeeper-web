@@ -10,7 +10,7 @@ export default function Navlink({ text, url }: NavlinkPropType) {
 	return (
 		<span className="capitalize">
 			<Link
-				className="hover-underline navlink max-w-fit cursor-pointer text-base sm:text-sm"
+				className="hover-underline navlink max-w-fit cursor-pointer text-base"
 				to={url ?? '/'}
 			>
 				{text}

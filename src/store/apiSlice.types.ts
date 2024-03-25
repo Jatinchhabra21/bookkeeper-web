@@ -17,11 +17,9 @@ export type ResetPasswordRequest =
 			email: string;
 			otp: number;
 			newPassword: string;
-			oldPassword: undefined;
 	  }
 	| {
 			email: string;
-			otp: undefined;
 			newPassword: string;
 			oldPassword: string;
 	  };

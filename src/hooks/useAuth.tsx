@@ -7,6 +7,8 @@ import { useContext, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
 import { createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../store/hooks';
+import { setUserDetails } from '../store/slices/unauthenticatedUserSlice';
 
 export const authContext = createContext<any>(null);
 
@@ -29,6 +31,8 @@ export function AuthProvider({ children }: any) {
 	const [authenticatedUser, setAuthenticatedUser] =
 		useState<AuthenticatedUserType | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+
+	const dispatch = useAppDispatch();
 
 	const navigate = useNavigate();
 
@@ -96,6 +100,7 @@ export function AuthProvider({ children }: any) {
 			})
 			.finally(() => {
 				setIsLoading(false);
+				dispatch(setUserDetails());
 				navigate('/');
 			});
 	};
