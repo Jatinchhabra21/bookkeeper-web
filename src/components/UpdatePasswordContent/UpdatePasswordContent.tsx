@@ -9,7 +9,7 @@ import { useResetPasswordMutation } from '../../store/slices/apiSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../../components/ui/use-toast';
-import { setUserDetails } from '../../store/slices/unauthenticatedUserSlice';
+import { setUserDetails } from '../../store/slices/userSlice';
 
 type PasswordInputFieldType = {
 	value: string;
@@ -35,7 +35,7 @@ export default function UpdatePasswordContent({
 
 	const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
-	const { email, otp } = useAppSelector((state) => state.unauthenticatedUser);
+	const { email, otp } = useAppSelector((state) => state.user);
 
 	const navigate = useNavigate();
 	const { toast } = useToast();

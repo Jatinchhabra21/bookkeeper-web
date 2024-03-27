@@ -1,186 +1,118 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DataTable from '../components/DataTable/DataTable';
 import { columns } from '../components/DataTable/Columns';
+import { PlusCircledIcon } from '@radix-ui/react-icons';
 import {
-	Transaction,
-	TransactionCategory,
-	TransactionType,
-} from '../components/DataTable/DataTable.types';
+	Pagination,
+	PaginationContent,
+	PaginationLink,
+	PaginationItem,
+	PaginationEllipsis,
+} from '../../components/ui/pagination';
+import { useGetTransactionsQuery } from '../store/slices/apiSlice';
 
-const tempData: Transaction[] = [
-	{
-		amount: 400,
-		category: TransactionCategory.HOUSING,
-		date: new Date(2024, 2, 12),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 21000,
-		category: TransactionCategory.FINANCIAL_EXPENSES,
-		date: new Date(2024, 2, 13),
-		id: '1',
-		name: 'A really long fake transaction display name for testing purposes',
-		type: TransactionType.CREDIT,
-	},
-	{
-		amount: 100000,
-		category: TransactionCategory.VEHICLE,
-		date: new Date(2024, 2, 11),
-		id: '1',
-		name: 'A really long fake transaction display name for testing purposes V2',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 12),
-		id: '1',
-		name: 'Fake transaction for maze ma',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-	{
-		amount: 1400,
-		category: TransactionCategory.ENTERTAINMENT,
-		date: new Date(2024, 2, 9),
-		id: '1',
-		name: 'Fake transaction',
-		type: TransactionType.DEBIT,
-	},
-];
+import logo from '../../public/assets/images/No data-cuate.svg';
 
 export default function Transactions() {
+	const [page, setPage] = useState<number>(1);
+	const { data: transactions, isFetching: isTransactionsFetching } =
+		useGetTransactionsQuery(page);
+
+	useEffect(() => {
+		console.log(transactions);
+	}, [isTransactionsFetching]);
+
+	const getPagesForPagination = () => {
+		if (transactions?.pageCount <= 10) {
+			return Array.from(
+				{ length: transactions?.pageCount - 1 },
+				(_, i) => i + 2
+			);
+		} else {
+			if (page < 3) {
+				return Array.from({ length: 4 }, (_, i) => i + 2);
+			} else if (transactions?.pageCount - page <= 3) {
+				return Array.from(
+					{ length: 4 },
+					(_, i) => transactions?.pageCount - i - 1
+				).reverse();
+			} else {
+				return [page - 2, page - 1, page, page + 1, page + 2];
+			}
+		}
+	};
+
 	return (
-		<div className="mx-auto my-8 w-11/12 sm:my-16 md:w-3/4 lg:my-8 xl:w-2/5">
-			<DataTable
-				columns={columns}
-				data={tempData.sort((t1, t2) => {
-					if (t1.date === t2.date) return 0;
-					else if (t1.date < t2.date) return -1;
-					else return 1;
-				})}
-			/>
+		<div className="mx-auto my-8 flex h-full w-11/12 flex-col gap-6 sm:my-16 sm:gap-8 md:w-3/4 lg:my-8 xl:w-2/5">
+			<h1 className="text-2xl font-extralight text-slate-400 md:text-3xl xl:text-4xl">
+				{'Transactions'}
+			</h1>
+			<div className="flex h-full flex-col justify-between gap-6">
+				{transactions?.data && (
+					<DataTable columns={columns} data={transactions.data} />
+				)}
+				{transactions?.pageCount > 0 && (
+					<Pagination>
+						<PaginationContent>
+							{transactions?.pageCount > 1 && (
+								<PaginationItem>
+									<PaginationLink
+										className="text-xs sm:text-sm"
+										onClick={() => setPage(1)}
+										isActive={page === 1}
+										href="#"
+									>
+										1
+									</PaginationLink>
+								</PaginationItem>
+							)}
+							{transactions?.pageCount > 1 && page - 1 > 3 && (
+								<PaginationItem>
+									<PaginationEllipsis className="text-xs sm:text-sm" />
+								</PaginationItem>
+							)}
+							{getPagesForPagination().map((pageNumber) => {
+								return (
+									<PaginationItem>
+										<PaginationLink
+											className="text-xs sm:text-sm"
+											onClick={() => setPage(pageNumber)}
+											isActive={page === pageNumber}
+											href="#"
+										>
+											{pageNumber}
+										</PaginationLink>
+									</PaginationItem>
+								);
+							})}
+							{transactions?.pageCount > 10 &&
+								transactions?.pageCount - page > 3 && (
+									<PaginationItem>
+										<PaginationEllipsis className="text-xs sm:text-sm" />
+									</PaginationItem>
+								)}
+							{transactions?.pageCount > 10 && (
+								<PaginationItem>
+									<PaginationLink
+										className="text-xs sm:text-sm"
+										onClick={() => setPage(transactions?.pageCount)}
+										isActive={page === transactions?.pageCount}
+										href="#"
+									>
+										{transactions?.pageCount}
+									</PaginationLink>
+								</PaginationItem>
+							)}
+						</PaginationContent>
+					</Pagination>
+				)}
+			</div>
+			{!transactions?.data && !isTransactionsFetching && (
+				<div className="flex h-full w-full flex-col items-center justify-center">
+					<img src={logo} className="w-96" />
+					<span className="text-3xl">No transactions found for you</span>
+				</div>
+			)}
 		</div>
 	);
 }

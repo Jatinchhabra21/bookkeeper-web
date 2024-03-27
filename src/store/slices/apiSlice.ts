@@ -1,19 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
-	CreateUserRequest,
 	OtpRequest,
 	ResetPasswordRequest,
 	UserPreference,
-	LoginRequestType,
-	LoginResponseType,
 } from '../apiSlice.types';
-import Cookies from 'js-cookie';
+import { store } from '../store';
 
 const baseQuery = fetchBaseQuery({
 	baseUrl: 'https://bookkeeper.azurewebsites.net/api',
 	prepareHeaders: (headers) => {
-		const token = Cookies.get('token');
-
+		const token = sessionStorage.getItem('token');
 		if (token) {
 			headers.set('authorization', `Bearer ${token}`);
 		}
@@ -23,8 +19,9 @@ const baseQuery = fetchBaseQuery({
 
 export const bookkeeperApi = createApi({
 	baseQuery,
+	tagTypes: ['Transaction'],
 	endpoints: (builder) => ({
-		// USER
+		// User
 		getUser: builder.query({
 			query: () => 'me/account',
 		}),
@@ -59,6 +56,20 @@ export const bookkeeperApi = createApi({
 				method: 'POST',
 			}),
 		}),
+		// transactions CRUD
+		getTransactions: builder.query<any, number | undefined>({
+			query: (pageNumber: number = 1) => ({
+				url: `transactions?pageNumber=${pageNumber}&pageSize=10`,
+			}),
+			providesTags: (result, _error, _page) =>
+				result?.data
+					? [
+							...result.data.map(({ id }: { id: string }) => {
+								return { type: 'Transaction', id: id };
+							}),
+						]
+					: [{ type: 'Transaction', id: `PARTIAL-TRANSACTION` }],
+		}),
 	}),
 });
 
@@ -69,4 +80,5 @@ export const {
 	useRequestAccountActivationOtpMutation,
 	useRequestResetPasswordOtpMutation,
 	useResetPasswordMutation,
+	useGetTransactionsQuery,
 } = bookkeeperApi;

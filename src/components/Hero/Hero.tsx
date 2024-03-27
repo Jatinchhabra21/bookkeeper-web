@@ -34,7 +34,7 @@ export default function Hero() {
 
 	return (
 		<div className="background-img mx-auto my-16 text-slate-100 sm:my-16 sm:w-4/5 md:my-12">
-			<h1 className="mb-4 text-2xl font-thin text-slate-400 md:text-3xl xl:text-4xl">
+			<h1 className="mb-4 text-2xl font-extralight text-slate-400 md:text-3xl xl:text-4xl">
 				{headerConstants.BOOKKEEPER}
 			</h1>
 			<div className="relative -z-10">

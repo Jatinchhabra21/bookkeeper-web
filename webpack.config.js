@@ -25,6 +25,10 @@ module.exports = {
 				use: ['file-loader'],
 			},
 			{
+				test: /\.svg$/,
+				loader: 'url-loader',
+			},
+			{
 				test: /\.css$/i,
 				include: path.resolve(__dirname, 'src'),
 				exclude: '/node_modules',

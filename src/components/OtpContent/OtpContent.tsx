@@ -8,7 +8,7 @@ import { cn } from '../../../lib/utils';
 import { CreateUserRequest } from '../../store/apiSlice.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { useAuth } from '../../hooks/useAuth';
-import { setOtp } from '../../store/slices/unauthenticatedUserSlice';
+import { setOtp } from '../../store/slices/userSlice';
 
 type OtpFieldStateType = {
 	value: string;
@@ -29,9 +29,7 @@ export default function OtpDialogContent({
 		{} as OtpFieldStateType
 	);
 
-	const { email, name, password } = useAppSelector(
-		(state) => state.unauthenticatedUser
-	);
+	const { email, name, password } = useAppSelector((state) => state.user);
 
 	const dispatch = useAppDispatch();
 

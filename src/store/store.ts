@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import unautenticatedUserSlice from './slices/unauthenticatedUserSlice';
+import userSlice from './slices/userSlice';
 import { bookkeeperApi } from './slices/apiSlice';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 export const store = configureStore({
 	reducer: {
-		unauthenticatedUser: unautenticatedUserSlice,
+		user: userSlice,
 		[bookkeeperApi.reducerPath]: bookkeeperApi.reducer,
 	},
 
