@@ -8,7 +8,10 @@ import { useToast } from '../../components/ui/use-toast';
 import { createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
-import { setUserDetails } from '../store/slices/unauthenticatedUserSlice';
+import {
+	setIsUserAuthenticated,
+	setUserDetails,
+} from '../store/slices/userSlice';
 
 export const authContext = createContext<any>(null);
 
@@ -54,18 +57,20 @@ export function AuthProvider({ children }: any) {
 			})
 			.then((data: LoginResponseType) => {
 				setAuthenticatedUser({
-					email: email,
+					email: data.email,
 					accessToken: data.accessToken,
 					expiresAt: data.expiresAt,
 					tokenId: data.tokenId,
-					name: undefined,
+					name: data.name,
 				});
+				sessionStorage.setItem('token', data.accessToken);
 			})
 			.catch((error) => {
 				toast({
 					title: error.errorMessage
-						? 'Uh oh! :( ' + error.errorMessage
-						: 'Uh oh! Something went wrong.',
+						? '🙁 Oops! ' + error.errorMessage
+						: '🙁 Oops! Something went wrong.',
+					variant: 'error',
 				});
 			})
 			.finally(() => {

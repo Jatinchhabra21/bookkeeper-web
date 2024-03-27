@@ -5,7 +5,7 @@ import constants, {
 } from '../../constants/Authentication.constants';
 import { Button } from '../../../components/ui/button';
 import { useAppDispatch } from '../../store/hooks';
-import { setEmail } from '../../store/slices/unauthenticatedUserSlice';
+import { setEmail } from '../../store/slices/userSlice';
 import { useRequestResetPasswordOtpMutation } from '../../store/slices/apiSlice';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { OtpRequest } from '../../store/apiSlice.types';

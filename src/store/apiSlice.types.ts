@@ -42,4 +42,6 @@ export type LoginResponseType = {
 	accessToken: string;
 	expiresAt: Date;
 	tokenId: string;
+	email: string;
+	name: string;
 };

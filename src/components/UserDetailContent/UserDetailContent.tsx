@@ -4,10 +4,7 @@ import { Input } from '../../../components/ui/input';
 import { AuthenticationStage } from '../../constants/Authentication.constants';
 import constants from '../../constants/Authentication.constants';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-	UnauthenticatedUserState,
-	setUserDetails,
-} from '../../store/slices/unauthenticatedUserSlice';
+import { UserState, setUserDetails } from '../../store/slices/userSlice';
 import { useRequestAccountActivationOtpMutation } from '../../store/slices/apiSlice';
 import { OtpRequest } from '../../store/apiSlice.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
@@ -36,9 +33,7 @@ export default function UserDetailDialogContent({
 	nextStage,
 }: UserDetailDialogContentProps) {
 	// redux state
-	const userEmail = useAppSelector(
-		(state: RootState) => state.unauthenticatedUser.email
-	);
+	const userEmail = useAppSelector((state: RootState) => state.user.email);
 	const { toast } = useToast(); // shadcn ui hook
 
 	const [
@@ -211,7 +206,7 @@ export default function UserDetailDialogContent({
 					name: userDetail.name,
 					email: userDetail.email,
 					password: userDetail.password,
-				} as UnauthenticatedUserState)
+				} as UserState)
 			);
 			requestOtp({ email: userDetail.email } as OtpRequest)
 				.unwrap()

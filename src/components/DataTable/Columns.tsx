@@ -5,23 +5,27 @@ export const columns: ColumnDef<Transaction>[] = [
 	{
 		accessorKey: 'date',
 		header: '',
-		cell: ({ row }) => (
-			<div className="flex flex-col items-center text-ellipsis uppercase">
-				<span className="text-xs">
-					{MONTH[(row.getValue('date') as Date).getMonth()]}
-				</span>
-				<span className="text-xl">
-					{(row.getValue('date') as Date).getDate() < 10
-						? '0' + (row.getValue('date') as Date).getDate().toString()
-						: (row.getValue('date') as Date).getDate()}
-				</span>
-			</div>
-		),
+		cell: ({ row }) => {
+			const date = new Date(row.getValue('date'));
+			return (
+				<div className="flex flex-col justify-center text-ellipsis uppercase">
+					<span className="text-xs">{MONTH[date.getMonth()]}</span>
+					<span className="text-xl">
+						{date.getDate() < 10
+							? '0' + date.getDate().toString()
+							: date.getDate()}
+					</span>
+				</div>
+			);
+		},
 	},
 	{
 		accessorKey: 'name',
 		header: '',
 		id: 'name',
+		cell: ({ row }) => (
+			<span className="text-sm sm:text-base">{row.getValue('name')}</span>
+		),
 	},
 	{
 		accessorKey: 'amount',

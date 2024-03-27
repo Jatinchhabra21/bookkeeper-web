@@ -17,7 +17,7 @@ export default function ResetPassword() {
 		AuthenticationStage.EMAIL_INPUT
 	);
 
-	const email = useAppSelector((state) => state.unauthenticatedUser.email);
+	const email = useAppSelector((state) => state.user.email);
 
 	function getCardContent(): ReactNode {
 		switch (stage) {
