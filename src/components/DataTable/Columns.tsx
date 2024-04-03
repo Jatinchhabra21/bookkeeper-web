@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { MONTH, Transaction, TransactionType } from './DataTable.types';
+import { Badge } from '../../../components/ui/badge';
 
 export const columns: ColumnDef<Transaction>[] = [
 	{
@@ -26,6 +27,18 @@ export const columns: ColumnDef<Transaction>[] = [
 		cell: ({ row }) => (
 			<span className="text-sm sm:text-base">{row.getValue('name')}</span>
 		),
+	},
+	{
+		accessorKey: 'category',
+		header: '',
+		id: 'category',
+		cell: ({ row }) => {
+			return row.original.type === 'debit' ? (
+				<Badge variant={'default'}>{row.getValue('category')}</Badge>
+			) : (
+				<></>
+			);
+		},
 	},
 	{
 		accessorKey: 'amount',
