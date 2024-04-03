@@ -3,15 +3,13 @@ import {
 	LoginRequestType,
 	LoginResponseType,
 } from '../store/apiSlice.types';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useToast } from '../../components/ui/use-toast';
 import { createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
-import {
-	setIsUserAuthenticated,
-	setUserDetails,
-} from '../store/slices/userSlice';
+import { setUserDetails } from '../store/slices/userSlice';
+import Cookies from 'js-cookie';
 
 export const authContext = createContext<any>(null);
 
@@ -41,6 +39,46 @@ export function AuthProvider({ children }: any) {
 
 	const { toast } = useToast();
 
+	useEffect(() => {
+		if (!authenticatedUser) silentLogIn();
+	}, []);
+
+	const silentLogIn = () => {
+		const credentials = JSON.parse(Cookies.get('credentials') ?? '{}');
+		if (credentials) {
+			setIsLoading(true);
+			fetch(`${baseUrl}/oauth2/token`, {
+				body: JSON.stringify(credentials),
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+				.then(async (response: Response) => {
+					const data = await response.json();
+					if (response.ok) return data;
+					else throw data;
+				})
+				.then((data: LoginResponseType) => {
+					setAuthenticatedUser({
+						email: data.email,
+						accessToken: data.accessToken,
+						expiresAt: data.expiresAt,
+						tokenId: data.tokenId,
+						name: data.name,
+					});
+					sessionStorage.setItem('token', data.accessToken);
+				})
+				.catch(() => {
+					sessionStorage.setItem('token', '');
+				})
+				.finally(() => {
+					setIsLoading(false);
+					navigate('/');
+				});
+		} else sessionStorage.setItem('token', '');
+	};
+
 	const logIn = ({ email, password }: LoginRequestType) => {
 		setIsLoading(true);
 		fetch(`${baseUrl}/oauth2/token`, {
@@ -63,6 +101,14 @@ export function AuthProvider({ children }: any) {
 					tokenId: data.tokenId,
 					name: data.name,
 				});
+				Cookies.set(
+					'credentials',
+					JSON.stringify({ email, password } as LoginRequestType),
+					{
+						expires: 7,
+						secure: true,
+					}
+				);
 				sessionStorage.setItem('token', data.accessToken);
 			})
 			.catch((error) => {

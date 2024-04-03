@@ -4,7 +4,7 @@ import {
 	ResetPasswordRequest,
 	UserPreference,
 } from '../apiSlice.types';
-import { store } from '../store';
+import { Transaction } from 'src/components/DataTable/DataTable.types';
 
 const baseQuery = fetchBaseQuery({
 	baseUrl: 'https://bookkeeper.azurewebsites.net/api',
@@ -57,18 +57,11 @@ export const bookkeeperApi = createApi({
 			}),
 		}),
 		// transactions CRUD
-		getTransactions: builder.query<any, number | undefined>({
-			query: (pageNumber: number = 1) => ({
-				url: `transactions?pageNumber=${pageNumber}&pageSize=10`,
+		getTransactions: builder.query<Transaction[], void>({
+			query: () => ({
+				url: `transactions`,
 			}),
-			providesTags: (result, _error, _page) =>
-				result?.data
-					? [
-							...result.data.map(({ id }: { id: string }) => {
-								return { type: 'Transaction', id: id };
-							}),
-						]
-					: [{ type: 'Transaction', id: `PARTIAL-TRANSACTION` }],
+			providesTags: ['Transaction'],
 		}),
 	}),
 });

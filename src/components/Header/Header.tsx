@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './styles.css';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -7,10 +7,12 @@ import { Button } from '../../../components/ui/button';
 import heroConstants from '../../constants/Hero.constants';
 import headerConstants from '../../constants/Header.constants';
 import { Link } from 'react-router-dom';
+import { authContext } from '../../hooks/useAuth';
 
 export default function Header() {
 	const [isNavExpanded, setIsNavExpanded] = useState<boolean>(false);
 	const { contextSafe } = useGSAP();
+	const { authenticatedUser } = useContext(authContext);
 
 	const handleHamburgerClick = contextSafe(() => {
 		if (!isNavExpanded) {
@@ -50,23 +52,27 @@ export default function Header() {
 				<div
 					className={`navbar absolute right-0 top-0 z-[1000] h-screen max-h-screen w-2/3 translate-x-full flex-col justify-between bg-[#010610]/95 px-8 font-light text-white sm:gap-6 md:gap-10 ${isNavExpanded ? 'flex' : 'hidden'} sm:static sm:flex sm:h-fit sm:w-full sm:translate-x-0 sm:flex-row sm:items-center sm:justify-end sm:bg-transparent sm:p-0`}
 				>
-					<nav className="flex flex-col gap-6 sm:flex-row sm:gap-4 md:gap-6">
-						<Navlink
-							text={headerConstants.NAV_LINK_TRANSACTIONS}
-							url="/transactions"
-						/>
-						<Navlink text={headerConstants.NAV_LINK_GOALS} />
-						<Navlink text={headerConstants.NAV_LINK_BUDGET} />
-						<Navlink text={headerConstants.NAV_LINK_BILLS} />
-					</nav>
-					<div className="flex flex-col justify-between gap-4 sm:flex-row">
-						<Button asChild variant={'default'}>
-							<Link to="/user/signup">{heroConstants.SIGNUP_CTA_TEXT}</Link>
-						</Button>
-						<Button asChild variant={'secondary'}>
-							<Link to="/user/login">{heroConstants.LOGIN_CTA_TEXT}</Link>
-						</Button>
-					</div>
+					{!!authenticatedUser && (
+						<nav className="flex flex-col gap-6 sm:flex-row sm:gap-4 md:gap-6">
+							<Navlink
+								text={headerConstants.NAV_LINK_TRANSACTIONS}
+								url="/transactions"
+							/>
+							<Navlink text={headerConstants.NAV_LINK_GOALS} />
+							<Navlink text={headerConstants.NAV_LINK_BUDGET} />
+							<Navlink text={headerConstants.NAV_LINK_BILLS} />
+						</nav>
+					)}
+					{!authenticatedUser && (
+						<div className="flex flex-col justify-between gap-4 sm:flex-row">
+							<Button asChild variant={'default'}>
+								<Link to="/user/signup">{heroConstants.SIGNUP_CTA_TEXT}</Link>
+							</Button>
+							<Button asChild variant={'secondary'}>
+								<Link to="/user/login">{heroConstants.LOGIN_CTA_TEXT}</Link>
+							</Button>
+						</div>
+					)}
 				</div>
 			</div>
 		</header>
