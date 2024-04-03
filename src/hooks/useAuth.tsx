@@ -39,12 +39,21 @@ export function AuthProvider({ children }: any) {
 
 	const { toast } = useToast();
 
+	const cookie = Cookies.withConverter({
+		write: function (value, name) {
+			return btoa(value);
+		},
+		read: function (value, name) {
+			return atob(value);
+		},
+	});
+
 	useEffect(() => {
 		if (!authenticatedUser) silentLogIn();
 	}, []);
 
 	const silentLogIn = () => {
-		const credentials = JSON.parse(Cookies.get('credentials') ?? '{}');
+		const credentials = JSON.parse(cookie.get(btoa('credentials')) ?? '{}');
 		if (credentials) {
 			setIsLoading(true);
 			fetch(`${baseUrl}/oauth2/token`, {
@@ -101,8 +110,8 @@ export function AuthProvider({ children }: any) {
 					tokenId: data.tokenId,
 					name: data.name,
 				});
-				Cookies.set(
-					'credentials',
+				cookie.set(
+					btoa('credentials'),
 					JSON.stringify({ email, password } as LoginRequestType),
 					{
 						expires: 7,
