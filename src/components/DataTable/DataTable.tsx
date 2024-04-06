@@ -19,8 +19,10 @@ import {
 	TableCell,
 	TableRow,
 } from '../../../components/ui/table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../../../components/ui/input';
+import OptionSelect from '../option-select/OptionSelect';
+import { TransactionCategory } from './DataTable.types';
 
 type DataTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[];
@@ -40,6 +42,17 @@ export default function DataTable<TData, TValue>({
 		pageIndex: 0,
 		pageSize: 10,
 	});
+	const [category, setCategory] = useState<string | null | undefined>();
+	const [time, setTime] = useState<string | null | undefined>();
+
+	useEffect(() => {
+		table.getColumn('category')?.setFilterValue(category);
+	}, [category]);
+
+	useEffect(() => {
+		table.getColumn('date')?.setFilterValue(time);
+	}, [time]);
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -52,18 +65,31 @@ export default function DataTable<TData, TValue>({
 		},
 	});
 
-	// TODO: add filter bar above datatable, a search input, range-datepicker, multi-select dropdown for category and single select dropdown for type
 	return (
 		<div className="flex flex-col justify-between gap-6">
-			<div className="flex">
+			<div className="flex flex-col justify-between gap-4 lg:flex-row">
 				<Input
 					placeholder="Filter transactions..."
 					value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
 					onChange={(event) =>
 						table.getColumn('name')?.setFilterValue(event.target.value)
 					}
-					className="max-w-sm"
+					className="w-full lg:max-w-sm"
 				/>
+				<div className="flex justify-end gap-6">
+					<OptionSelect
+						ctaText="Time"
+						options={['This month', 'Last month', 'Last 30 days']}
+						setOption={setTime}
+						option={time}
+					/>
+					<OptionSelect
+						ctaText="Category"
+						options={Object.values(TransactionCategory)}
+						setOption={setCategory}
+						option={category}
+					/>
+				</div>
 			</div>
 			<div className="rounded-md border text-white">
 				<Table>

@@ -16,7 +16,7 @@ export default function App() {
 		<Suspense fallback={<FullPageSpinner size={Size.normal} />}>
 			<AuthProvider>
 				<Toaster />
-				<div className="relative flex h-screen flex-col overflow-x-hidden">
+				<div className="relative flex h-svh flex-col overflow-x-hidden">
 					<Header />
 					<Routes>
 						<Route path="/" element={<HomePage />} />
