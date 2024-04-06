@@ -17,7 +17,7 @@ export default function Transactions() {
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 	return (
-		<div className="mx-auto my-8 flex h-full w-11/12 flex-col gap-6 sm:my-16 sm:gap-8 md:w-3/4 lg:my-8 xl:w-2/5">
+		<div className="mx-auto my-8 flex h-full w-11/12 flex-col gap-6 sm:my-16 sm:gap-8 md:w-3/4 lg:my-8 xl:w-[800px]">
 			{transactions?.length && (
 				<h1 className="text-2xl font-extralight text-slate-400 md:text-3xl xl:text-4xl">
 					{'Transactions'}

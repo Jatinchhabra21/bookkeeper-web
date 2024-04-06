@@ -1,4 +1,4 @@
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { MONTH, Transaction, TransactionType } from './DataTable.types';
 import { Badge } from '../../../components/ui/badge';
 
@@ -9,15 +9,32 @@ export const columns: ColumnDef<Transaction>[] = [
 		cell: ({ row }) => {
 			const date = new Date(row.getValue('date'));
 			return (
-				<div className="flex flex-col justify-center text-ellipsis uppercase">
+				<span className="flex w-fit flex-col items-center justify-center text-ellipsis uppercase">
 					<span className="text-xs">{MONTH[date.getMonth()]}</span>
 					<span className="text-xl">
 						{date.getDate() < 10
 							? '0' + date.getDate().toString()
 							: date.getDate()}
 					</span>
-				</div>
+				</span>
 			);
+		},
+		filterFn: (row: Row<Transaction>, columnId: string, filterValue: any) => {
+			const date = new Date(row.getValue('date'));
+			const currentDate = new Date();
+			if (filterValue === 'This month') {
+				return date.getMonth() === currentDate.getMonth();
+			} else if (filterValue === 'Last month') {
+				return currentDate.getMonth() - 1 < 0
+					? date.getMonth() === 12 &&
+							date.getFullYear() === currentDate.getFullYear() - 1
+					: date.getMonth() === currentDate.getMonth() - 1;
+			} else if (filterValue === 'Last 30 days') {
+				const minimumDate = new Date();
+				minimumDate.setDate(currentDate.getDate() - 30);
+				return date >= minimumDate && date <= currentDate;
+			}
+			return true;
 		},
 	},
 	{
@@ -27,6 +44,7 @@ export const columns: ColumnDef<Transaction>[] = [
 		cell: ({ row }) => (
 			<span className="text-sm sm:text-base">{row.getValue('name')}</span>
 		),
+		filterFn: 'includesString',
 	},
 	{
 		accessorKey: 'category',
@@ -39,6 +57,7 @@ export const columns: ColumnDef<Transaction>[] = [
 				<></>
 			);
 		},
+		filterFn: 'equalsString',
 	},
 	{
 		accessorKey: 'amount',
