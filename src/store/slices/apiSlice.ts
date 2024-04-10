@@ -4,7 +4,10 @@ import {
 	ResetPasswordRequest,
 	UserPreference,
 } from '../apiSlice.types';
-import { Transaction } from 'src/components/DataTable/DataTable.types';
+import {
+	CreateTransactionRequest,
+	Transaction,
+} from 'src/components/DataTable/DataTable.types';
 
 const baseQuery = fetchBaseQuery({
 	baseUrl: 'https://bookkeeper.azurewebsites.net/api',
@@ -63,6 +66,14 @@ export const bookkeeperApi = createApi({
 			}),
 			providesTags: ['Transaction'],
 		}),
+		createTransactions: builder.mutation({
+			query: (transaction: CreateTransactionRequest) => ({
+				url: 'transactions',
+				method: 'POST',
+				body: transaction,
+			}),
+			invalidatesTags: ['Transaction'],
+		}),
 	}),
 });
 
@@ -74,4 +85,5 @@ export const {
 	useRequestResetPasswordOtpMutation,
 	useResetPasswordMutation,
 	useGetTransactionsQuery,
+	useCreateTransactionsMutation,
 } = bookkeeperApi;

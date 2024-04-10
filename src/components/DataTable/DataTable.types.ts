@@ -7,6 +7,14 @@ export type Transaction = {
 	type: TransactionType;
 };
 
+export type CreateTransactionRequest = {
+	date: Date;
+	name: string;
+	category: TransactionCategory;
+	amount: number;
+	type: TransactionType.DEBIT;
+};
+
 export enum TransactionCategory {
 	SHOPPING = 'shopping',
 	FOOD = 'food',
