@@ -2,7 +2,7 @@ import { columns } from '../components/DataTable/Columns';
 import { useGetTransactionsQuery } from '../store/slices/apiSlice';
 
 import logo from '../../public/assets/images/No data-cuate.svg';
-import { lazy } from 'react';
+import { lazy, useState } from 'react';
 import { DataTableType } from '../components/DataTable/DataTable';
 import TransactionSheet from '../components/transaction-sheet/TransactionSheet';
 
@@ -17,23 +17,25 @@ export default function Transactions() {
 		?.slice()
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+	const [open, setOpen] = useState<boolean>(false);
+
 	return (
-		<div className="flex flex-col gap-6 my-8 mx-auto w-11/12 h-full sm:gap-8 sm:my-16 md:w-3/4 lg:my-8 xl:w-[800px]">
+		<div className="mx-auto my-8 flex h-full w-11/12 flex-col gap-6 sm:my-16 sm:gap-8 md:w-3/4 lg:my-8 xl:w-[800px]">
 			{transactions?.length && (
-				<div className="flex justify-between items-center">
-					<h1 className="text-2xl font-extralight md:text-3xl xl:text-4xl text-slate-400">
+				<div className="flex items-center justify-between">
+					<h1 className="text-2xl font-extralight text-slate-400 md:text-3xl xl:text-4xl">
 						{'Transactions'}
 					</h1>
-					<TransactionSheet mode="Add" />
+					<TransactionSheet mode="Add" open={open} setOpen={setOpen} />
 				</div>
 			)}
-			<div className="flex flex-col gap-6 justify-between h-full">
+			<div className="flex h-full flex-col justify-between gap-6">
 				{sortedTransactions?.length && (
 					<DataTable columns={columns} data={sortedTransactions} />
 				)}
 			</div>
 			{!transactions?.length && !isTransactionsFetching && (
-				<div className="flex flex-col justify-center items-center w-full h-full">
+				<div className="flex h-full w-full flex-col items-center justify-center">
 					<img src={logo} className="w-96" />
 					<span className="text-3xl">No transactions found for you</span>
 				</div>

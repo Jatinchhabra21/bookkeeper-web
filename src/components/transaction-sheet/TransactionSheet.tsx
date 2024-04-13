@@ -16,28 +16,43 @@ import {
 	CreateTransactionRequest,
 	TransactionCategory,
 	TransactionType,
+	Transaction,
 } from '../DataTable/DataTable.types';
 import { DatePicker } from '../DatePicker/DatePicker';
 import OptionSelect from '../option-select/OptionSelect';
-import { useCreateTransactionsMutation } from '../../store/slices/apiSlice';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import {
+	useCreateTransactionsMutation,
+	useDeleteTransactionMutation,
+	useUpdateTransactionMutation,
+} from '../../store/slices/apiSlice';
+import { ReloadIcon, TrashIcon } from '@radix-ui/react-icons';
+import { useToast } from '../../../components/ui/use-toast';
 
 type TransactionSheetPropType = {
 	mode: 'Add' | 'Edit';
+	open: boolean;
+	transaction?: Transaction;
+	setOpen: any;
 };
 
-export default function TransactionSheet({ mode }: TransactionSheetPropType) {
-	const [transaction, setTransaction] = useState<CreateTransactionRequest>({
-		name: '',
-		amount: 0,
-		date: new Date(),
-	} as CreateTransactionRequest);
+export default function TransactionSheet(props: TransactionSheetPropType) {
+	const [transaction, setTransaction] = useState<Transaction>(
+		{} as Transaction
+	);
 	const [category, setCategory] = useState<string | null | undefined>();
 
 	const [createTransaction, { isLoading: creatingTransaction }] =
 		useCreateTransactionsMutation();
 
-	const [open, setOpen] = useState<boolean>(false);
+	const [updateTransaction, { isLoading: updatingTransaction }] =
+		useUpdateTransactionMutation();
+
+	const [deleteTransaction, { isLoading: deletingTransaction }] =
+		useDeleteTransactionMutation();
+
+	const isLoading = creatingTransaction || updatingTransaction;
+
+	const { toast } = useToast();
 
 	const setDate = (date: Date | undefined) => {
 		console.log(date);
@@ -50,30 +65,62 @@ export default function TransactionSheet({ mode }: TransactionSheetPropType) {
 	};
 
 	useEffect(() => {
-		if (!open) setTransaction({} as CreateTransactionRequest);
-		setCategory(undefined);
-	}, [open]);
+		if (props.transaction) {
+			setTransaction(props.transaction);
+			setCategory(props.transaction?.category);
+		}
+	}, [props.transaction]);
+
+	useEffect(() => {
+		if (!props.open) {
+			setTransaction({} as Transaction);
+			setCategory(undefined);
+		}
+	}, [props.open]);
 
 	// TODO: Add validations
 	return (
-		<Sheet open={open} onOpenChange={setOpen}>
-			<SheetTrigger asChild>
-				<Button variant="default">Add</Button>
-			</SheetTrigger>
+		<Sheet open={props.open} onOpenChange={props.setOpen}>
+			{props.mode === 'Add' && (
+				<SheetTrigger asChild>
+					<Button variant="default">Add</Button>
+				</SheetTrigger>
+			)}
 			<SheetOverlay />
 			<SheetContent className="flex flex-col justify-between">
 				<div>
 					<SheetHeader>
 						<SheetTitle>
-							{mode === 'Add' ? 'Add transactions' : 'Edit Transactions'}
+							{props.mode === 'Add' ? 'Add transactions' : 'Edit Transactions'}
 						</SheetTitle>
-						<SheetDescription>
-							{mode === 'Add'
+						<SheetDescription className="flex items-center justify-between">
+							{props.mode === 'Add'
 								? 'Create a new transaction'
 								: 'Editing an old transaction'}
+							{props.mode === 'Edit' && (
+								<Button
+									variant="outline"
+									size="icon"
+									onClick={() => {
+										props.transaction &&
+											deleteTransaction(props.transaction.id)
+												.unwrap()
+												.then(() => props.setOpen(false))
+												.catch((error) => {
+													toast({
+														title: 'Uh oh! Something went wrong.',
+														description: error.data.ErrorMessage,
+													});
+												});
+									}}
+									disabled={deletingTransaction}
+								>
+									<TrashIcon className="h-4 w-4" />
+								</Button>
+							)}
 						</SheetDescription>
 					</SheetHeader>
-					<div className="flex flex-col gap-4 mt-8">
+					<div className="mt-8 flex flex-col gap-4">
 						<Input
 							type="text"
 							placeholder="Name"
@@ -114,20 +161,44 @@ export default function TransactionSheet({ mode }: TransactionSheetPropType) {
 				<SheetFooter>
 					<Button
 						variant="default"
-						onClick={() =>
-							createTransaction({
-								name: transaction.name,
-								amount: transaction.amount,
-								category: category,
-								date: transaction.date,
-								type: TransactionType.DEBIT,
-							} as CreateTransactionRequest).then(() => setOpen(false))
-						}
+						disabled={isLoading || deletingTransaction}
+						onClick={() => {
+							props.mode === 'Add'
+								? createTransaction({
+									name: transaction.name,
+									amount: transaction.amount,
+									category: category,
+									date: transaction.date,
+									type: TransactionType.DEBIT,
+								} as CreateTransactionRequest)
+									.unwrap()
+									.then(() => props.setOpen(false))
+									.catch((error) => {
+										toast({
+											title: 'Uh oh! Something went wrong.',
+											description: error.data.ErrorMessage,
+										});
+									})
+								: updateTransaction({
+									name: transaction.name,
+									date: transaction.date,
+									category: category ? category : transaction.category,
+									amount: transaction.amount,
+									id: transaction.id,
+									type: transaction.type,
+								})
+									.unwrap()
+									.then(() => props.setOpen(false))
+									.catch((error) => {
+										toast({
+											title: 'Uh oh! Something went wrong.',
+											description: error.data.ErrorMessage,
+										});
+									});
+						}}
 					>
-						{creatingTransaction && (
-							<ReloadIcon className="mr-2 w-4 h-4 animate-spin" />
-						)}
-						{creatingTransaction ? 'Please wait' : 'Save'}
+						{isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+						{isLoading ? 'Please wait' : 'Save'}
 					</Button>
 					<SheetClose asChild>
 						<Button variant="secondary">Cancel</Button>

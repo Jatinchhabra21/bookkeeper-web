@@ -74,6 +74,47 @@ export const bookkeeperApi = createApi({
 			}),
 			invalidatesTags: ['Transaction'],
 		}),
+		updateTransaction: builder.mutation({
+			query: (transaction: Transaction) => {
+				return {
+					url: `transactions/${transaction.id}`,
+					method: 'PATCH',
+					body: {
+						date: transaction.date,
+						name: transaction.name,
+						amount: transaction.amount,
+						category: transaction.category,
+					},
+				};
+			},
+			async onQueryStarted({ id, ..._patch }, { dispatch, queryFulfilled }) {
+				try {
+					const { data: updatedTransaction } = await queryFulfilled;
+					dispatch(
+						bookkeeperApi.util.updateQueryData(
+							'getTransactions',
+							undefined,
+							(transactions) => {
+								const idx = transactions.findIndex(
+									(transaction) => transaction.id === updatedTransaction.id
+								);
+								transactions[idx].amount = updatedTransaction.amount;
+								transactions[idx].date = updatedTransaction.date;
+								transactions[idx].category = updatedTransaction.category;
+								transactions[idx].name = updatedTransaction.name;
+							}
+						)
+					);
+				} catch { }
+			},
+		}),
+		deleteTransaction: builder.mutation({
+			query: (transactionId: string) => ({
+				url: `transactions/${transactionId}`,
+				method: 'DELETE',
+			}),
+			invalidatesTags: ['Transaction'],
+		}),
 	}),
 });
 
@@ -86,4 +127,6 @@ export const {
 	useResetPasswordMutation,
 	useGetTransactionsQuery,
 	useCreateTransactionsMutation,
+	useUpdateTransactionMutation,
+	useDeleteTransactionMutation,
 } = bookkeeperApi;

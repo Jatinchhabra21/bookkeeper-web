@@ -9,7 +9,7 @@ export const columns: ColumnDef<Transaction>[] = [
 		cell: ({ row }) => {
 			const date = new Date(row.getValue('date'));
 			return (
-				<span className="flex w-fit flex-col items-center justify-center text-ellipsis uppercase">
+				<span className="flex flex-col justify-center items-center uppercase w-fit text-ellipsis">
 					<span className="text-xs">{MONTH[date.getMonth()]}</span>
 					<span className="text-xl">
 						{date.getDate() < 10
@@ -19,7 +19,7 @@ export const columns: ColumnDef<Transaction>[] = [
 				</span>
 			);
 		},
-		filterFn: (row: Row<Transaction>, columnId: string, filterValue: any) => {
+		filterFn: (row: Row<Transaction>, _: string, filterValue: any) => {
 			const date = new Date(row.getValue('date'));
 			const currentDate = new Date();
 			if (filterValue === 'This month') {
