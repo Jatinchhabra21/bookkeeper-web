@@ -22,7 +22,8 @@ import {
 import { useEffect, useState } from 'react';
 import { Input } from '../../../components/ui/input';
 import OptionSelect from '../option-select/OptionSelect';
-import { TransactionCategory } from './DataTable.types';
+import { TransactionCategory, Transaction } from './DataTable.types';
+import TransactionSheet from '../transaction-sheet/TransactionSheet';
 
 type DataTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[];
@@ -44,6 +45,8 @@ export default function DataTable<TData, TValue>({
 	});
 	const [category, setCategory] = useState<string | null | undefined>();
 	const [time, setTime] = useState<string | null | undefined>();
+	const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
+	const [open, setOpen] = useState<boolean>(false);
 
 	useEffect(() => {
 		table.getColumn('category')?.setFilterValue(category);
@@ -66,84 +69,101 @@ export default function DataTable<TData, TValue>({
 	});
 
 	return (
-		<div className="flex flex-col justify-between gap-6">
-			<div className="flex flex-col justify-between gap-4 lg:flex-row">
-				<Input
-					placeholder="Filter transactions..."
-					value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-					onChange={(event) =>
-						table.getColumn('name')?.setFilterValue(event.target.value)
-					}
-					className="w-full lg:max-w-sm"
-				/>
-				<div className="flex justify-end gap-6">
-					<OptionSelect
-						ctaText="Time"
-						options={['This month', 'Last month', 'Last 30 days']}
-						setOption={setTime}
-						option={time}
+		<>
+			<TransactionSheet
+				mode="Edit"
+				transaction={selectedTransaction}
+				open={open}
+				setOpen={setOpen}
+			/>
+			<div className="flex flex-col gap-6 justify-between">
+				<div className="flex flex-col gap-4 justify-between lg:flex-row">
+					<Input
+						placeholder="Filter transactions..."
+						value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+						onChange={(event) =>
+							table.getColumn('name')?.setFilterValue(event.target.value)
+						}
+						className="w-full lg:max-w-sm"
 					/>
-					<OptionSelect
-						ctaText="Category"
-						options={Object.values(TransactionCategory)}
-						setOption={setCategory}
-						option={category}
-					/>
+					<div className="flex gap-6 justify-end">
+						<OptionSelect
+							ctaText="Time"
+							options={['This month', 'Last month', 'Last 30 days']}
+							setOption={setTime}
+							option={time}
+						/>
+						<OptionSelect
+							ctaText="Category"
+							options={Object.values(TransactionCategory)}
+							setOption={setCategory}
+							option={category}
+						/>
+					</div>
+				</div>
+				<div className="text-white rounded-md border">
+					<Table>
+						<TableBody>
+							{table.getRowModel().rows?.length ? (
+								table.getRowModel().rows.map((row) => (
+									<TableRow
+										key={row.id}
+										onClick={() => {
+											setSelectedTransaction(
+												row.original as unknown as Transaction
+											);
+											setOpen(true);
+										}}
+										className="cursor-pointer"
+										data-state={row.getIsSelected() && 'selected'}
+									>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell key={cell.id} className="z-0">
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)}
+											</TableCell>
+										))}
+									</TableRow>
+								))
+							) : (
+								<TableRow>
+									<TableCell
+										colSpan={columns.length}
+										className="h-24 text-center"
+									>
+										No results.
+									</TableCell>
+								</TableRow>
+							)}
+						</TableBody>
+					</Table>
+				</div>
+				<div>
+					<Pagination className="flex justify-end">
+						<PaginationContent className="flex gap-6">
+							<PaginationItem>
+								<PaginationPrevious
+									className={`cursor-pointer ${!table.getCanPreviousPage() ? 'cursor-not-allowed text-slate-700 hover:text-slate-600' : ''}`}
+									aria-disabled={table.getCanPreviousPage()}
+									onClick={() =>
+										table.getCanPreviousPage() && table.previousPage()
+									}
+								/>
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationNext
+									className={`cursor-pointer ${!table.getCanNextPage() ? 'cursor-not-allowed text-slate-700 hover:text-slate-600' : ''}`}
+									aria-disabled={table.getCanNextPage()}
+									onClick={() => table.getCanNextPage() && table.nextPage()}
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
 				</div>
 			</div>
-			<div className="rounded-md border text-white">
-				<Table>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && 'selected'}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="z-0">
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext()
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
-			<div>
-				<Pagination className="flex justify-end">
-					<PaginationContent className="flex gap-6">
-						<PaginationItem>
-							<PaginationPrevious
-								className={`cursor-pointer ${!table.getCanPreviousPage() ? 'cursor-not-allowed text-slate-700 hover:text-slate-600' : ''}`}
-								aria-disabled={table.getCanPreviousPage()}
-								onClick={() => table.previousPage()}
-							/>
-						</PaginationItem>
-						<PaginationItem>
-							<PaginationNext
-								className={`cursor-pointer ${!table.getCanNextPage() ? 'cursor-not-allowed text-slate-700 hover:text-slate-600' : ''}`}
-								aria-disabled={table.getCanNextPage()}
-								onClick={() => table.nextPage()}
-							/>
-						</PaginationItem>
-					</PaginationContent>
-				</Pagination>
-			</div>
-		</div>
+		</>
 	);
 }
 

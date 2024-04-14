@@ -2,9 +2,17 @@ export type Transaction = {
 	id: string;
 	date: Date;
 	name: string;
-	category: TransactionCategory;
+	category: string;
 	amount: number;
 	type: TransactionType;
+};
+
+export type CreateTransactionRequest = {
+	date: Date;
+	name: string;
+	category: TransactionCategory;
+	amount: number;
+	type: TransactionType.DEBIT;
 };
 
 export enum TransactionCategory {
